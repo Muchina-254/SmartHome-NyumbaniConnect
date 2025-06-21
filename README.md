@@ -3,18 +3,36 @@ SmartHome is a digital platform designed to bring trust, efficiency, and conveni
 
 **Market Need**: 
 Kenya’s rental and property sales market is plagued by fraudulent listings, manual processes, trust gaps, and limited service integration. Tenants often fall victim to scams by fake landlords or unverified agents. Meanwhile, landlords and property developers struggle with long vacancy periods, poor digital visibility, and difficulty managing tenant relationships. Despite increasing urbanization and smartphone adoption, the industry lacks a centralized platform offering verified listings, tenant screening, and bundled services like internet, water, and cleaning. With over 3 million urban renters and more than 80% mobile penetration, the market is ripe for a digital platform that modernizes how real estate transactions happen—offering not just listings, but end-to-end home connection.
-**
-Project Value**: SmartNyumba is a mobile-first digital platform that transforms Kenya’s property experience. It offers:
 
-Verified listings to eliminate fraud
+**Project Value**: SmartNyumba is a mobile-first digital platform that transforms Kenya’s property experience. It offers:
 
-Secure landlord-tenant matching
+1. Verified listings to eliminate fraud
 
-Integrated utility and household service providers
+2. Secure landlord-tenant matching
 
-Lease management and tenant vetting tools
+3. Integrated utility and household service providers
 
-Custom dashboards for landlords, tenants, and agents
+3. Lease management and tenant vetting tools
 
-Digital-first experiences for the next generation of renters and buyers
+4. Custom dashboards for landlords, tenants, and agents
+
+5. Digital-first experiences for the next generation of renters and buyers
+
+
+**Key Benefits**
+i. Verified Listings Only – Builds trust and eliminates scams
+
+ii. Tenant Screening – Ensures secure rentals
+
+iii. Service Integration – Internet, water, furniture, insurance all in one place
+
+iv. Listing Dashboard – For landlords and developers to manage properties
+
+v. Smart Search – Personalized home recommendations
+
+vi. Secure Communication – Between landlords, tenants, and agents
+
+vii. Mobile-First – Optimized for accessibility on the go
+
+   
 
