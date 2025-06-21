@@ -62,7 +62,7 @@ Project will be structured using a MERN stack and deployed via Firebase and GitH
 
 | Name            | Role                       | GitHub Handle     | Responsibilities                             |
 |-----------------|----------------------------|-------------------|----------------------------------------------|
-| Sarah Muchina   | Product Lead & Analyst     | @sarahmuchina     | Strategy, market research, stakeholder mgmt  |
+| Sarah Muchina   | Product Lead & Analyst     | @Muchina-254      | Strategy, market research, stakeholder mgmt  |
 | Alvin Kiprotich | Backend Developer          |                   | API design, DB architecture, auth flows      |
 | Abdel           | Frontend/Mobile Developer  |                   | UI/UX, React Native app, responsiveness      |
 | Ann Mutua       | QA & Tester                |                   | Testing, bug reporting, user feedback        |
