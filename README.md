@@ -63,32 +63,32 @@ Project will be structured using a MERN stack and deployed via Firebase and GitH
 | Name            | Role                       | GitHub Handle     | Responsibilities                             |
 |-----------------|----------------------------|-------------------|----------------------------------------------|
 | Sarah Muchina   | Product Lead & Analyst     | @sarahmuchina     | Strategy, market research, stakeholder mgmt  |
-| Allan Sharad    | Backend Developer          | @allansh          | API design, DB architecture, auth flows      |
-| Iqbal Sharif    | Frontend/Mobile Developer  | @iqbalsharif      | UI/UX, React Native app, responsiveness      |
-| Grace Nyambura  | QA & Tester                | @gracenyambura    | Testing, bug reporting, user feedback        |
+| Alvin Kiprotich | Backend Developer          |                   | API design, DB architecture, auth flows      |
+| Abdel           | Frontend/Mobile Developer  |                   | UI/UX, React Native app, responsiveness      |
+| Ann Mutua       | QA & Tester                |                   | Testing, bug reporting, user feedback        |
 
 ---
 
 ## 🗓️ Project Timeline
 
-### Phase 1: MVP Development *(Jan–Mar 2025)*
+### Phase 1: MVP Development *(June–July 2025)*
 - Property listings
 - Smart search filters
 - Landlord/tenant dashboards
 - Firebase Auth integration
 
-### Phase 2: Core Features *(Apr–Jun 2025)*
+### Phase 2: Core Features *(June–July 2025)*
 - Verified account badge system
 - Chat & email communication
 - M-Pesa integration
 - Property analytics dashboard
 
-### Phase 3: Smart Tools *(Jul–Sep 2025)*
+### Phase 3: Smart Tools *(July–Aug 2025)*
 - Pre-screening automation
 - Lease digitalization
 - 3-city pilot
 
-### Phase 4: Scale *(Oct–Dec 2025)*
+### Phase 4: Scale *(July–Aug 2025)*
 - Expansion to East Africa
 - Swahili support
 - Marketing campaign
