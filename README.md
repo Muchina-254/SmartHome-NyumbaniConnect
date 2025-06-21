@@ -2,7 +2,7 @@
 
 SmartHome is a mobile-first digital platform that transforms the Kenyan real estate experience by offering verified property listings, tenant-landlord matching, and seamless service integration. Designed to solve fraud, long vacancy periods, and inefficient communication, SmartNyumba modernizes how property is rented, managed, and moved into.
 
----
+
 
 ## 🚨 Market Need
 
@@ -14,7 +14,7 @@ Kenya’s rental and property sales market suffers from:
 
 With over 3 million urban renters and 80%+ smartphone penetration, there is a major opportunity to digitize this sector through a secure, transparent, and mobile solution.
 
----
+
 
 ## 💡 Project Value
 
@@ -26,7 +26,7 @@ SmartNyumba offers:
 - ✅ Secure landlord-tenant-developer collaboration
 - ✅ Mobile-first access for convenience
 
----
+
 
 ## 👥 Target Users
 
@@ -41,7 +41,7 @@ SmartNyumba offers:
 - **Tech Proficiency:** Basic to intermediate smartphone users
 - **Income:** Lower-middle to upper-middle class
 
----
+
 
 ## 📦 Use Cases
 - Tenants safely finding genuine, ready-to-move-in rentals
@@ -49,14 +49,14 @@ SmartNyumba offers:
 - Developers engaging directly with potential buyers
 - Service providers bundling utilities with rentals
 
----
+
 
 ## 🛠️ How to Run the Project
 
 _Will be updated once code is ready._  
 Project will be structured using a MERN stack and deployed via Firebase and GitHub Actions.
 
----
+
 
 ## 👩🏽‍💻 Team Members
 
@@ -67,7 +67,7 @@ Project will be structured using a MERN stack and deployed via Firebase and GitH
 | Abdel           | Frontend/Mobile Developer  |                   | UI/UX, React Native app, responsiveness      |
 | Ann Mutua       | QA & Tester                |                   | Testing, bug reporting, user feedback        |
 
----
+
 
 ## 🗓️ Project Timeline
 
@@ -94,7 +94,6 @@ Project will be structured using a MERN stack and deployed via Firebase and GitH
 - Marketing campaign
 - 5,000+ listings goal
 
----
 
 ## 🧭 Project Board
 
@@ -108,7 +107,6 @@ Access the project roadmap and sprint planning on our GitHub Project Board:
 - **Review** – Awaiting testing/review  
 - **Done** – Completed tasks/features
 
----
 
 ## 🏁 Sprint Schedule
 
@@ -117,13 +115,11 @@ Access the project roadmap and sprint planning on our GitHub Project Board:
 - **Reviews:** Alternate Fridays  
 - **Standups:** Mon, Wed, Fri (virtual)
 
----
 
 ## 📌 License
 
 This project is licensed under the MIT License.
 
----
 
 ## ❤️ Built for
 
