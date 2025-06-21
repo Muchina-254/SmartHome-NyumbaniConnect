@@ -19,7 +19,9 @@ Kenya’s rental and property sales market is plagued by fraudulent listings, ma
 5. Digital-first experiences for the next generation of renters and buyers
 
 
+
 **Key Benefits**
+
 i. Verified Listings Only – Builds trust and eliminates scams
 
 ii. Tenant Screening – Ensures secure rentals
