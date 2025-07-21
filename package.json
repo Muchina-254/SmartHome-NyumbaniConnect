@@ -1,0 +1,40 @@
+{
+  "name": "smarthome-nyumbaniconnect",
+  "version": "1.0.0",
+  "description": "SmartHome-NyumbaniConnect: A comprehensive real estate platform for Kenya",
+  "main": "api/index.js",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "start": "cd frontend && npm start",
+    "dev": "cd frontend && npm start",
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "deploy-setup": "node deploy-setup.js",
+    "vercel-deploy": "vercel --prod"
+  },
+  "keywords": [
+    "real-estate",
+    "kenya",
+    "property",
+    "rental",
+    "vercel",
+    "nextjs"
+  ],
+  "author": "SmartHome Team",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.10.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.10.0",
+    "express-validator": "^7.0.1",
+    "helmet": "^7.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.5.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
