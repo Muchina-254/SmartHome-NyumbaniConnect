@@ -10,24 +10,116 @@ const Login = () => {
     password: ''
   });
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [fieldTouched, setFieldTouched] = useState({});
+
+  const validateField = (name, value) => {
+    const newErrors = { ...errors };
+
+    switch (name) {
+      case 'email':
+        if (!value.trim()) {
+          newErrors.email = 'Email address is required';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          newErrors.email = 'Please enter a valid email address';
+        } else {
+          delete newErrors.email;
+        }
+        break;
+
+      case 'password':
+        if (!value) {
+          newErrors.password = 'Password is required';
+        } else if (value.length < 6) {
+          newErrors.password = 'Password must be at least 6 characters';
+        } else {
+          delete newErrors.password;
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+
+    // Clear server errors when user starts typing
+    if (errors[name] && fieldTouched[name]) {
+      validateField(name, value);
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setFieldTouched({
+      ...fieldTouched,
+      [name]: true
+    });
+    validateField(name, value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate all fields
+    const fieldsToValidate = ['email', 'password'];
+    let isValid = true;
+    
+    fieldsToValidate.forEach(field => {
+      const fieldValid = validateField(field, formData[field]);
+      if (!fieldValid) isValid = false;
+      setFieldTouched(prev => ({ ...prev, [field]: true }));
+    });
+
+    if (!isValid) {
+      toast.error('Please fix the errors in the form');
+      return;
+    }
+
     setLoading(true);
+    setErrors({}); // Clear any existing errors
 
     try {
       const response = await authService.login(formData);
       toast.success(`Welcome back, ${response.user.firstName}!`);
       navigate('/dashboard');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Login failed');
+      console.error('Login error:', error);
+      
+      // Handle specific error types
+      if (error.response?.status === 401) {
+        const message = error.response.data.message;
+        if (message.includes('Invalid credentials') || message.includes('password')) {
+          setErrors({ 
+            password: 'Invalid email or password. Please check your credentials and try again.' 
+          });
+          toast.error('Invalid email or password');
+        } else if (message.includes('email')) {
+          setErrors({ 
+            email: 'No account found with this email address' 
+          });
+          toast.error('No account found with this email address');
+        } else {
+          toast.error('Login failed. Please check your credentials.');
+        }
+      } else if (error.response?.status === 429) {
+        toast.error('Too many login attempts. Please try again later.');
+      } else if (error.response?.status === 500) {
+        toast.error('Server error. Please try again later or contact support.');
+      } else if (error.code === 'NETWORK_ERROR' || !error.response) {
+        toast.error('Network error. Please check your internet connection and try again.');
+      } else {
+        toast.error(error.response?.data?.message || 'Login failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -44,98 +136,148 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900">
-            Welcome Back to SmartNyumba
-          </h2>
-          <p className="mt-2 text-gray-600">
-            Sign in to your account to continue
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          {/* Quick Login Options */}
-          <div className="mb-6">
-            <p className="text-sm text-gray-600 mb-3">Quick test login:</p>
-            <div className="space-y-2">
-              <button
-                onClick={() => fillSampleCredentials('landlord')}
-                className="w-full text-left px-3 py-2 text-sm bg-blue-50 text-blue-700 rounded border hover:bg-blue-100"
-              >
-                👤 Login as Landlord (Mary Wanjiku)
-              </button>
-              <button
-                onClick={() => fillSampleCredentials('agent')}
-                className="w-full text-left px-3 py-2 text-sm bg-green-50 text-green-700 rounded border hover:bg-green-100"
-              >
-                🏢 Login as Agent (Peter Mwangi)
-              </button>
-              <button
-                onClick={() => fillSampleCredentials('tenant')}
-                className="w-full text-left px-3 py-2 text-sm bg-purple-50 text-purple-700 rounded border hover:bg-purple-100"
-              >
-                🏠 Login as Tenant (Ann Wanjiru)
-              </button>
+    <div className="min-h-screen bg-neutral-50 flex flex-col justify-center">
+      {/* Spacer for fixed navbar */}
+      <div className="h-20"></div>
+      
+      <div className="section-professional">
+        <div className="container-professional">
+          <div className="max-w-md mx-auto">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 bg-primary-100 text-primary-700 px-4 py-2 rounded-full text-body-sm font-semibold mb-6 animate-scale-in">
+                <span className="icon icon-key"></span>
+                Secure Login
+              </div>
+              <h1 className="text-display-lg font-display font-bold text-neutral-900 mb-4 animate-slide-up">
+                Welcome Back to 
+                <span className="gradient-text-professional block">SmartNyumba</span>
+              </h1>
+              <p className="text-body-lg text-neutral-600 animate-slide-up animate-delay-200">
+                Sign in to your account to continue your property journey
+              </p>
             </div>
-          </div>
 
-          <div className="border-t pt-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-                  placeholder="Enter your email"
-                />
+            <div className="card card-elevated p-8 animate-slide-up animate-delay-300">
+              {/* Quick Login Options */}
+              <div className="mb-8">
+                <p className="text-body-sm text-neutral-600 mb-4 font-medium">Quick test login:</p>
+                <div className="space-y-3">
+                  <button
+                    onClick={() => fillSampleCredentials('landlord')}
+                    className="w-full text-left p-3 bg-secondary-50 text-secondary-700 rounded-lg border border-secondary-200 hover:bg-secondary-100 transition-all hover-lift focus-professional"
+                  >
+                    <span className="flex items-center gap-3">
+                      <span className="icon icon-user text-xl"></span>
+                      <div>
+                        <div className="font-medium">Login as Landlord</div>
+                        <div className="text-body-sm opacity-75">Mary Wanjiku</div>
+                      </div>
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => fillSampleCredentials('agent')}
+                    className="w-full text-left p-3 bg-primary-50 text-primary-700 rounded-lg border border-primary-200 hover:bg-primary-100 transition-all hover-lift focus-professional"
+                  >
+                    <span className="flex items-center gap-3">
+                      <span className="icon icon-building text-xl"></span>
+                      <div>
+                        <div className="font-medium">Login as Agent</div>
+                        <div className="text-body-sm opacity-75">Peter Mwangi</div>
+                      </div>
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => fillSampleCredentials('tenant')}
+                    className="w-full text-left p-3 bg-neutral-100 text-neutral-700 rounded-lg border border-neutral-200 hover:bg-neutral-200 transition-all hover-lift focus-professional"
+                  >
+                    <span className="flex items-center gap-3">
+                      <span className="icon icon-home text-xl"></span>
+                      <div>
+                        <div className="font-medium">Login as Tenant</div>
+                        <div className="text-body-sm opacity-75">Ann Wanjiru</div>
+                      </div>
+                    </span>
+                  </button>
+                </div>
               </div>
 
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Password
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-                  placeholder="Enter your password"
-                />
-              </div>
+              <div className="border-t border-neutral-200 pt-8">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <label htmlFor="email" className="block text-body-sm font-semibold text-neutral-700 mb-2">
+                      Email Address
+                    </label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={`input-professional ${errors.email ? 'border-error-500 focus:border-error-500 focus:ring-error-100' : ''}`}
+                      placeholder="Enter your email address"
+                    />
+                    {errors.email && (
+                      <div className="flex items-center gap-1 mt-1 text-error-600 text-body-sm">
+                        <span className="icon icon-alert text-sm"></span>
+                        {errors.email}
+                      </div>
+                    )}
+                  </div>
 
-              <div>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
-                >
-                  {loading ? 'Signing in...' : 'Sign in'}
-                </button>
-              </div>
-            </form>
+                  <div>
+                    <label htmlFor="password" className="block text-body-sm font-semibold text-neutral-700 mb-2">
+                      Password
+                    </label>
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      required
+                      value={formData.password}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={`input-professional ${errors.password ? 'border-error-500 focus:border-error-500 focus:ring-error-100' : ''}`}
+                      placeholder="Enter your password"
+                    />
+                    {errors.password && (
+                      <div className="flex items-center gap-1 mt-1 text-error-600 text-body-sm">
+                        <span className="icon icon-alert text-sm"></span>
+                        {errors.password}
+                      </div>
+                    )}
+                  </div>
 
-            <div className="mt-6">
-              <div className="text-center">
-                <span className="text-sm text-gray-600">
-                  Don't have an account?{' '}
-                  <Link to="/register" className="font-medium text-green-600 hover:text-green-500">
-                    Sign up here
-                  </Link>
-                </span>
+                  <div>
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="btn btn-primary w-full justify-center hover-scale focus-professional"
+                    >
+                      {loading ? (
+                        <>
+                          <div className="spinner-professional w-5 h-5 mr-2"></div>
+                          Signing in...
+                        </>
+                      ) : (
+                        <>
+                          <span className="icon icon-rocket mr-2"></span>
+                          Sign in to Account
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+
+                <div className="mt-8 text-center">
+                  <span className="text-body-md text-neutral-600">
+                    Don't have an account?{' '}
+                    <Link to="/register" className="text-primary-600 hover:text-primary-700 font-medium transition-colors">
+                      Sign up here
+                    </Link>
+                  </span>
+                </div>
               </div>
             </div>
           </div>

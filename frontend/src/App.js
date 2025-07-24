@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Link } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Toaster } from 'react-hot-toast';
 
@@ -11,6 +11,19 @@ import PropertyDetail from './pages/PropertyDetail';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import HelpCenter from './pages/HelpCenter';
+import AddProperty from './pages/AddProperty';
+import ManageProperties from './pages/ManageProperties';
+import SavedProperties from './pages/SavedProperties';
+import MyInquiries from './pages/MyInquiries';
+import Messages from './pages/Messages';
+import Analytics from './pages/Analytics';
+import EditProfile from './pages/EditProfile';
+import SafetyTips from './pages/SafetyTips';
+import TermsOfService from './pages/TermsOfService';
+import NotFound from './pages/NotFound';
 
 // Styles
 import './App.css';
@@ -21,7 +34,7 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
       retry: 1,
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 5 * 60 * 1000,
     },
   },
 });
@@ -41,25 +54,96 @@ function ScrollToTop() {
   return null;
 }
 
-// Loading component
+// Professional Loading component
 const PageLoader = () => (
   <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
     <div className="text-center">
-      <div className="animate-bounce text-6xl mb-4">🏠</div>
-      <div className="spinner mx-auto mb-4"></div>
-      <p className="text-gray-600 font-medium">Loading SmartNyumba...</p>
+      <div className="icon icon-home text-8xl mb-6 text-primary-500 animate-pulse-soft"></div>
+      <div className="spinner-professional mx-auto mb-6"></div>
+      <h3 className="text-heading-md text-neutral-900 mb-2">SmartNyumba</h3>
+      <p className="text-body-md text-neutral-600">Loading Kenya's Premier Property Platform</p>
     </div>
   </div>
+);
+
+// Professional Footer Component
+const Footer = () => (
+  <footer className="bg-neutral-900 text-white section-professional">
+    <div className="container-professional">
+      <div className="grid md:grid-cols-4 gap-12 mb-12">
+        <div className="animate-slide-up">
+          <div className="flex items-center mb-6">
+            <div className="icon icon-home text-4xl text-primary-500 animate-pulse-soft"></div>
+            <div className="ml-3">
+              <div className="text-xl font-display font-bold">SmartNyumba</div>
+              <div className="text-xs text-neutral-400 font-medium tracking-wide uppercase">
+                Kenya Property Platform
+              </div>
+            </div>
+          </div>
+          <p className="text-body-md text-neutral-300 mb-6 leading-relaxed">
+            Kenya's leading property platform connecting renters with verified landlords 
+            across all 47 counties. Experience the future of property hunting.
+          </p>
+          <div className="flex space-x-4">
+            <span className="icon icon-phone text-2xl hover-scale cursor-pointer transition-transform text-neutral-400 hover:text-white"></span>
+            <span className="icon icon-message text-2xl hover-scale cursor-pointer transition-transform text-neutral-400 hover:text-white"></span>
+            <span className="icon icon-email text-2xl hover-scale cursor-pointer transition-transform text-neutral-400 hover:text-white"></span>
+            <span className="icon icon-settings text-2xl hover-scale cursor-pointer transition-transform text-neutral-400 hover:text-white"></span>
+          </div>
+        </div>
+        
+        <div className="animate-slide-up animate-delay-100">
+          <h3 className="text-heading-md font-bold mb-6">Quick Links</h3>
+          <ul className="space-y-3">
+            <li><Link to="/" className="text-neutral-300 hover:text-white transition-colors text-body-md hover-lift flex items-center gap-2 focus-professional"><span className="icon icon-home"></span> Home</Link></li>
+            <li><Link to="/properties" className="text-neutral-300 hover:text-white transition-colors text-body-md hover-lift flex items-center gap-2 focus-professional"><span className="icon icon-search"></span> Browse Properties</Link></li>
+            <li><Link to="/register" className="text-neutral-300 hover:text-white transition-colors text-body-md hover-lift flex items-center gap-2 focus-professional"><span className="icon icon-plus"></span> List Property</Link></li>
+            <li><Link to="/dashboard" className="text-neutral-300 hover:text-white transition-colors text-body-md hover-lift flex items-center gap-2 focus-professional"><span className="icon icon-chart"></span> Dashboard</Link></li>
+          </ul>
+        </div>
+        
+        <div className="animate-slide-up animate-delay-200">
+          <h3 className="text-heading-md font-bold mb-6">Support</h3>
+          <ul className="space-y-3">
+            <li><Link to="/help" className="text-neutral-300 hover:text-white transition-colors text-body-md hover-lift flex items-center gap-2 focus-professional"><span className="icon icon-star"></span> Help Center</Link></li>
+            <li><Link to="/contact" className="text-neutral-300 hover:text-white transition-colors text-body-md hover-lift flex items-center gap-2 focus-professional"><span className="icon icon-phone"></span> Contact Us</Link></li>
+            <li><Link to="/safety-tips" className="text-neutral-300 hover:text-white transition-colors text-body-md hover-lift flex items-center gap-2 focus-professional"><span className="icon icon-verified"></span> Safety Tips</Link></li>
+            <li><Link to="/terms" className="text-neutral-300 hover:text-white transition-colors text-body-md hover-lift flex items-center gap-2 focus-professional"><span className="icon icon-settings"></span> Terms of Service</Link></li>
+          </ul>
+        </div>
+        
+        <div className="animate-slide-up animate-delay-300">
+          <h3 className="text-heading-md font-bold mb-6">Popular Areas</h3>
+          <ul className="space-y-3">
+            <li><Link to="/properties?county=nairobi" className="text-neutral-300 hover:text-white transition-colors text-body-sm hover-lift flex items-center gap-2 focus-professional"><span className="icon icon-location"></span> Nairobi Properties</Link></li>
+            <li><Link to="/properties?county=mombasa" className="text-neutral-300 hover:text-white transition-colors text-body-sm hover-lift flex items-center gap-2 focus-professional"><span className="icon icon-location"></span> Mombasa Rentals</Link></li>
+            <li><Link to="/properties?county=kisumu" className="text-neutral-300 hover:text-white transition-colors text-body-sm hover-lift flex items-center gap-2 focus-professional"><span className="icon icon-location"></span> Kisumu Homes</Link></li>
+            <li><Link to="/properties?county=nakuru" className="text-neutral-300 hover:text-white transition-colors text-body-sm hover-lift flex items-center gap-2 focus-professional"><span className="icon icon-location"></span> Nakuru Properties</Link></li>
+            <li><Link to="/properties?county=eldoret" className="text-neutral-300 hover:text-white transition-colors text-body-sm hover-lift flex items-center gap-2 focus-professional"><span className="icon icon-location"></span> Eldoret Apartments</Link></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div className="border-t border-neutral-800 pt-8 text-center">
+        <p className="text-body-md text-neutral-400">
+          &copy; 2025 SmartNyumba. All rights reserved. Made with <span className="icon icon-heart text-error-500"></span> in Kenya
+        </p>
+        <p className="text-body-sm text-neutral-500 mt-2">
+          Empowering Kenyans to find their perfect homes since 2025
+        </p>
+      </div>
+    </div>
+  </footer>
 );
 
 function App() {
   const [isLoading, setIsLoading] = React.useState(true);
 
   useEffect(() => {
-    // Simulate app initialization
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1500);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -74,72 +158,31 @@ function App() {
         <div className="App">
           <ScrollToTop />
           <Navbar />
-          <main className="min-h-screen bg-gray-50">
+          <main className="min-h-screen bg-neutral-50">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/properties" element={<Properties />} />
+              <Route path="/properties/add" element={<AddProperty />} />
+              <Route path="/properties/manage" element={<ManageProperties />} />
               <Route path="/properties/:id" element={<PropertyDetail />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/help" element={<HelpCenter />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/saved-properties" element={<SavedProperties />} />
+              <Route path="/my-inquiries" element={<MyInquiries />} />
+              <Route path="/messages" element={<Messages />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/edit-profile" element={<EditProfile />} />
+              <Route path="/safety-tips" element={<SafetyTips />} />
+              <Route path="/terms" element={<TermsOfService />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
 
-          {/* Enhanced Footer */}
-          <footer className="bg-gray-900 text-white py-12">
-            <div className="max-w-7xl mx-auto px-4">
-              <div className="grid md:grid-cols-4 gap-8">
-                <div className="animate-fade-in-up">
-                  <div className="flex items-center mb-4">
-                    <div className="text-3xl">🏠</div>
-                    <span className="ml-2 text-xl font-bold">SmartNyumba</span>
-                  </div>
-                  <p className="text-gray-400 mb-4">
-                    Kenya's leading property platform connecting renters with verified landlords across all 47 counties.
-                  </p>
-                  <div className="flex space-x-4">
-                    <span className="text-2xl hover:scale-110 transition-transform cursor-pointer">📱</span>
-                    <span className="text-2xl hover:scale-110 transition-transform cursor-pointer">💬</span>
-                    <span className="text-2xl hover:scale-110 transition-transform cursor-pointer">📧</span>
-                  </div>
-                </div>
-                
-                <div className="animate-fade-in-up" style={{animationDelay: '0.1s'}}>
-                  <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-                  <ul className="space-y-2 text-gray-400">
-                    <li><a href="/" className="hover:text-white transition-colors">🏠 Home</a></li>
-                    <li><a href="/properties" className="hover:text-white transition-colors">🔍 Browse Properties</a></li>
-                    <li><a href="/register" className="hover:text-white transition-colors">📝 List Property</a></li>
-                    <li><a href="/dashboard" className="hover:text-white transition-colors">📊 Dashboard</a></li>
-                  </ul>
-                </div>
-                
-                <div className="animate-fade-in-up" style={{animationDelay: '0.2s'}}>
-                  <h3 className="text-lg font-semibold mb-4">Support</h3>
-                  <ul className="space-y-2 text-gray-400">
-                    <li><a href="#" className="hover:text-white transition-colors">❓ Help Center</a></li>
-                    <li><a href="#" className="hover:text-white transition-colors">📞 Contact Us</a></li>
-                    <li><a href="#" className="hover:text-white transition-colors">🛡️ Safety Tips</a></li>
-                    <li><a href="#" className="hover:text-white transition-colors">📋 Terms of Service</a></li>
-                  </ul>
-                </div>
-                
-                <div className="animate-fade-in-up" style={{animationDelay: '0.3s'}}>
-                  <h3 className="text-lg font-semibold mb-4">Popular Areas</h3>
-                  <ul className="space-y-2 text-gray-400 text-sm">
-                    <li><a href="#" className="hover:text-white transition-colors">📍 Nairobi Properties</a></li>
-                    <li><a href="#" className="hover:text-white transition-colors">📍 Mombasa Rentals</a></li>
-                    <li><a href="#" className="hover:text-white transition-colors">📍 Kisumu Homes</a></li>
-                    <li><a href="#" className="hover:text-white transition-colors">📍 Nakuru Properties</a></li>
-                  </ul>
-                </div>
-              </div>
-              
-              <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2025 SmartNyumba. All rights reserved. Made with ❤️ in Kenya 🇰🇪</p>
-              </div>
-            </div>
-          </footer>
+          <Footer />
 
           {/* Enhanced Toast Notifications */}
           <Toaster 
@@ -148,37 +191,37 @@ function App() {
               duration: 4000,
               style: {
                 background: 'rgba(255, 255, 255, 0.95)',
-                color: '#1f2937',
-                border: '1px solid rgba(5, 150, 105, 0.2)',
+                color: 'var(--neutral-800)',
+                border: '1px solid rgba(34, 197, 94, 0.2)',
                 backdropFilter: 'blur(20px)',
-                borderRadius: '12px',
-                fontSize: '14px',
+                borderRadius: 'var(--radius-lg)',
+                fontSize: '0.875rem',
                 fontWeight: '500',
-                padding: '16px',
-                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+                padding: '16px 20px',
+                boxShadow: 'var(--shadow-lg)',
               },
               success: {
                 iconTheme: {
-                  primary: '#059669',
+                  primary: 'var(--primary-600)',
                   secondary: '#ffffff',
                 },
               },
               error: {
                 iconTheme: {
-                  primary: '#ef4444',
+                  primary: 'var(--error-500)',
                   secondary: '#ffffff',
                 },
               },
             }}
           />
 
-          {/* Floating Action Button for Quick Actions */}
-          <div className="fixed bottom-6 right-6 z-40">
+          {/* Floating Action Button */}
+          <div className="fixed bottom-8 right-8 z-40">
             <div className="relative">
-              <button className="btn-modern w-16 h-16 rounded-full text-2xl animate-pulse-custom shadow-2xl">
-                💬
+              <button className="btn btn-primary w-16 h-16 rounded-full text-2xl shadow-2xl hover-scale focus-professional animate-pulse-soft flex items-center justify-center">
+                <span className="icon icon-message text-white"></span>
               </button>
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold animate-bounce">
+              <div className="absolute -top-2 -right-2 w-6 h-6 bg-error-500 rounded-full flex items-center justify-center text-white text-xs font-bold animate-bounce">
                 !
               </div>
             </div>

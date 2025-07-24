@@ -67,54 +67,61 @@ const Properties = () => {
   const activeFiltersCount = Object.values(filters).filter(value => value !== '').length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-neutral-50">
       {/* Spacer for fixed navbar */}
-      <div className="h-16"></div>
+      <div className="h-20"></div>
       
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-5xl font-bold mb-4 animate-fade-in-down">
-            <span className="gradient-text">Discover Properties</span> in Kenya 🇰🇪
-          </h1>
-          <p className="text-xl text-gray-600 animate-fade-in-up max-w-2xl mx-auto">
-            Find your perfect home from our collection of verified listings across all 47 counties
-          </p>
-        </div>
+      <div className="container-professional">
+        <div className="section-professional">
+          {/* Header */}
+          <div className="mb-16 text-center">
+            <div className="inline-flex items-center gap-2 bg-primary-100 text-primary-700 px-4 py-2 rounded-full text-body-sm font-semibold mb-6 animate-scale-in">
+              <span className="icon icon-home"></span>
+              Premium Properties
+            </div>
+            <h1 className="text-display-2xl font-display font-bold text-neutral-900 mb-6 animate-slide-up">
+              Discover Properties
+              <span className="gradient-text-professional block">in Kenya</span>
+            </h1>
+            <p className="text-body-lg text-neutral-600 animate-slide-up animate-delay-200 max-w-3xl mx-auto">
+              Find your perfect home from our collection of verified listings across all 47 counties
+            </p>
+          </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="glass p-4 rounded-xl text-center animate-fade-in-up">
-            <div className="text-2xl mb-2">🏠</div>
-            <div className="text-lg font-bold gradient-text">{properties.length}</div>
-            <div className="text-sm text-gray-600">Available Properties</div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+          <div className="glass-professional p-6 rounded-xl text-center animate-slide-up">
+            <div className="icon icon-building text-4xl mb-3 text-primary-600"></div>
+            <div className="text-heading-md gradient-text-professional">{properties.length}</div>
+            <div className="text-body-sm text-neutral-600">Available Properties</div>
           </div>
-          <div className="glass p-4 rounded-xl text-center animate-fade-in-up" style={{animationDelay: '0.1s'}}>
-            <div className="text-2xl mb-2">📍</div>
-            <div className="text-lg font-bold gradient-text">47</div>
-            <div className="text-sm text-gray-600">Counties Covered</div>
+          <div className="glass-professional p-6 rounded-xl text-center animate-slide-up animate-delay-100">
+            <div className="icon icon-location text-4xl mb-3 text-primary-600"></div>
+            <div className="text-heading-md gradient-text-professional">47</div>
+            <div className="text-body-sm text-neutral-600">Counties Covered</div>
           </div>
-          <div className="glass p-4 rounded-xl text-center animate-fade-in-up" style={{animationDelay: '0.2s'}}>
-            <div className="text-2xl mb-2">✅</div>
-            <div className="text-lg font-bold gradient-text">100%</div>
-            <div className="text-sm text-gray-600">Verified Listings</div>
+          <div className="glass-professional p-6 rounded-xl text-center animate-slide-up animate-delay-200">
+            <div className="icon icon-verified text-4xl mb-3 text-success-600"></div>
+            <div className="text-heading-md gradient-text-professional">100%</div>
+            <div className="text-body-sm text-neutral-600">Verified Listings</div>
           </div>
-          <div className="glass p-4 rounded-xl text-center animate-fade-in-up" style={{animationDelay: '0.3s'}}>
-            <div className="text-2xl mb-2">⚡</div>
-            <div className="text-lg font-bold gradient-text">24hrs</div>
-            <div className="text-sm text-gray-600">Response Time</div>
+          <div className="glass-professional p-6 rounded-xl text-center animate-slide-up animate-delay-300">
+            <div className="icon icon-lightning text-4xl mb-3 text-warning-600"></div>
+            <div className="text-heading-md gradient-text-professional">24hrs</div>
+            <div className="text-body-sm text-neutral-600">Response Time</div>
           </div>
         </div>
 
         {/* Filter Toggle Button */}
-        <div className="mb-6 flex justify-center">
+        <div className="mb-8 flex justify-center">
           <button
             onClick={() => setFiltersVisible(!filtersVisible)}
-            className="btn-modern flex items-center gap-2 relative"
+            className="btn btn-secondary hover-scale focus-professional relative"
           >
-            🔍 Advanced Filters
+            <span className="icon icon-search mr-2"></span>
+            Advanced Filters
             {activeFiltersCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 text-sm flex items-center justify-center animate-pulse">
+              <span className="absolute -top-2 -right-2 bg-error-500 text-white rounded-full w-6 h-6 text-body-sm flex items-center justify-center animate-pulse-soft">
                 {activeFiltersCount}
               </span>
             )}
@@ -122,103 +129,111 @@ const Properties = () => {
         </div>
 
         {/* Filters */}
-        <div className={`transition-all duration-500 overflow-hidden ${filtersVisible ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-          <div className="glass p-8 rounded-2xl mb-8 animate-fade-in-down">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold gradient-text">
-                🎯 Find Your Perfect Match
+        <div className={`transition-all duration-300 overflow-hidden ${filtersVisible ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+          <div className="glass-professional p-8 rounded-xl mb-12 animate-slide-down">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-heading-lg gradient-text-professional flex items-center gap-2">
+                <span className="icon icon-target"></span>
+                Find Your Perfect Match
               </h2>
               {activeFiltersCount > 0 && (
                 <button
                   onClick={clearFilters}
-                  className="text-red-500 hover:text-red-700 font-medium transition-colors flex items-center gap-2"
+                  className="text-error-500 hover:text-error-600 font-medium transition-colors flex items-center gap-2"
                 >
-                  ❌ Clear All ({activeFiltersCount})
+                  <span className="icon icon-close"></span>
+                  Clear All ({activeFiltersCount})
                 </button>
               )}
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="animate-slide-in-left">
-                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                  📍 Location
+              <div className="animate-slide-left">
+                <label className="block text-body-sm font-semibold text-neutral-700 mb-2 flex items-center gap-2">
+                  <span className="icon icon-location"></span>
+                  Location
                 </label>
                 <input
                   type="text"
                   placeholder="e.g., Nairobi, Westlands, Karen"
                   value={filters.location}
                   onChange={(e) => handleFilterChange('location', e.target.value)}
-                  className="focus-ring w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 transition-all duration-300"
+                  className="input-professional"
                 />
               </div>
               
-              <div className="animate-slide-in-left" style={{animationDelay: '0.1s'}}>
-                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                  🏢 Property Type
+              <div className="animate-slide-left animate-delay-100">
+                <label className="block text-body-sm font-semibold text-neutral-700 mb-2 flex items-center gap-2">
+                  <span className="icon icon-building"></span>
+                  Property Type
                 </label>
                 <select
                   value={filters.propertyType}
                   onChange={(e) => handleFilterChange('propertyType', e.target.value)}
-                  className="focus-ring w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 transition-all duration-300"
+                  className="select-professional"
                 >
                   <option value="">All Types</option>
-                  <option value="apartment">🏢 Apartment</option>
-                  <option value="house">🏠 House</option>
-                  <option value="studio">🏘️ Studio</option>
-                  <option value="bedsitter">🛏️ Bedsitter</option>
-                  <option value="commercial">🏬 Commercial</option>
+                  <option value="apartment">Apartment</option>
+                  <option value="house">House</option>
+                  <option value="studio">Studio</option>
+                  <option value="bedsitter">Bedsitter</option>
+                  <option value="commercial">Commercial</option>
                 </select>
               </div>
 
-              <div className="animate-slide-in-left" style={{animationDelay: '0.2s'}}>
-                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                  🏷️ Listing Type
+              <div className="animate-slide-left animate-delay-200">
+                <label className="block text-body-sm font-semibold text-neutral-700 mb-2 flex items-center gap-2">
+                  <span className="icon icon-tag"></span>
+                  Listing Type
                 </label>
                 <select
                   value={filters.listingType}
                   onChange={(e) => handleFilterChange('listingType', e.target.value)}
-                  className="focus-ring w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 transition-all duration-300"
+                  className="select-professional"
                 >
                   <option value="">All Listings</option>
-                  <option value="rent">🏠 For Rent</option>
-                  <option value="sale">🏡 For Sale</option>
+                  <option value="rent">For Rent</option>
+                  <option value="sale">For Sale</option>
                 </select>
               </div>
 
-              <div className="animate-slide-in-right">
-                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                  💰 Min Price (KES)
+              <div className="animate-slide-right">
+                <label className="block text-body-sm font-semibold text-neutral-700 mb-2 flex items-center gap-2">
+                  <span className="icon icon-money"></span>
+                  Min Price (KES)
                 </label>
                 <input
                   type="number"
                   placeholder="10,000"
                   value={filters.minPrice}
                   onChange={(e) => handleFilterChange('minPrice', e.target.value)}
-                  className="focus-ring w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 transition-all duration-300"
+                  className="input-professional"
                 />
               </div>
 
-              <div className="animate-slide-in-right" style={{animationDelay: '0.1s'}}>
-                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                  💸 Max Price (KES)
+              <div className="animate-slide-right animate-delay-100">
+                <label className="block text-body-sm font-semibold text-neutral-700 mb-2 flex items-center gap-2">
+                  <span className="icon icon-money"></span>
+                  Max Price (KES)
                 </label>
                 <input
                   type="number"
                   placeholder="100,000"
                   value={filters.maxPrice}
                   onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
-                  className="focus-ring w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 transition-all duration-300"
+                  className="input-professional"
                 />
               </div>
 
-              <div className="animate-slide-in-right" style={{animationDelay: '0.2s'}}>
-                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                  🛏️ Bedrooms
+              <div className="animate-slide-right animate-delay-200">
+                <label className="block text-body-sm font-semibold text-neutral-700 mb-2 flex items-center gap-2">
+                  <span className="icon icon-bed"></span>
+                  Bedrooms
                 </label>
                 <select
                   value={filters.bedrooms}
                   onChange={(e) => handleFilterChange('bedrooms', e.target.value)}
-                  className="focus-ring w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 transition-all duration-300"
+                  className="select-professional"
                 >
                   <option value="">Any Number</option>
                   <option value="0">Studio</option>
@@ -233,18 +248,24 @@ const Properties = () => {
         </div>
 
         {/* Results Header */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8 glass p-4 rounded-xl">
-          <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+        <div className="flex flex-col lg:flex-row justify-between items-center mb-12 glass-professional p-6 rounded-xl">
+          <h2 className="text-heading-lg text-neutral-900 flex items-center gap-2 mb-4 lg:mb-0">
             {loading ? (
-              <>🔄 Searching...</>
+              <>
+                <span className="icon icon-refresh animate-spin"></span>
+                Searching...
+              </>
             ) : (
-              <>🎯 {properties.length} Properties Found</>
+              <>
+                <span className="icon icon-target"></span>
+                {properties.length} Properties Found
+              </>
             )}
           </h2>
           
           {!loading && properties.length > 0 && (
-            <div className="flex items-center gap-4 mt-4 md:mt-0">
-              <select className="p-2 border-2 border-gray-200 rounded-lg focus:border-green-500 transition-all">
+            <div className="flex items-center gap-4">
+              <select className="select-professional">
                 <option>Sort by: Newest</option>
                 <option>Price: Low to High</option>
                 <option>Price: High to Low</option>
@@ -256,27 +277,28 @@ const Properties = () => {
 
         {/* Properties Grid */}
         {loading ? (
-          <div className="text-center py-16">
-            <div className="inline-block animate-bounce mb-6">
-              <div className="text-6xl">🏠</div>
+          <div className="text-center py-20">
+            <div className="inline-block animate-float mb-6">
+              <div className="icon icon-home text-8xl text-primary-500"></div>
             </div>
-            <div className="spinner mx-auto mb-4"></div>
-            <p className="text-xl text-gray-600 font-medium">Finding amazing properties for you... ✨</p>
+            <div className="spinner-professional mx-auto mb-6"></div>
+            <p className="text-body-lg text-neutral-600 font-medium">Finding amazing properties for you...</p>
           </div>
         ) : properties.length === 0 ? (
-          <div className="text-center py-16 glass rounded-2xl">
-            <div className="text-8xl mb-6 animate-bounce">🔍</div>
-            <h3 className="text-3xl font-bold text-gray-800 mb-4">
+          <div className="text-center py-20 glass-professional rounded-xl">
+            <div className="icon icon-search text-8xl mb-8 animate-float text-neutral-400"></div>
+            <h3 className="text-heading-xl text-neutral-900 mb-6">
               No Properties Found
             </h3>
-            <p className="text-xl text-gray-600 mb-6 max-w-md mx-auto">
+            <p className="text-body-lg text-neutral-600 mb-8 max-w-md mx-auto">
               Try adjusting your search filters or explore different areas to find more properties.
             </p>
             <button
               onClick={clearFilters}
-              className="btn-modern"
+              className="btn btn-primary hover-scale focus-professional"
             >
-              🔄 Reset Filters & Start Fresh
+              <span className="icon icon-refresh mr-2"></span>
+              Reset Filters & Start Fresh
             </button>
           </div>
         ) : (
@@ -284,71 +306,76 @@ const Properties = () => {
             {properties.map((property, index) => (
               <div
                 key={property._id}
-                className="property-card-enhanced animate-fade-in-up"
+                className="property-card property-card-professional animate-slide-up hover-lift"
                 style={{animationDelay: `${index * 0.1}s`}}
               >
-                <div className="h-56 bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 flex items-center justify-center relative overflow-hidden">
+                <div className="h-64 gradient-hero-professional flex items-center justify-center relative overflow-hidden">
                   <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-                  <span className="text-white text-6xl z-10">🏠</span>
+                  <span className="icon icon-home text-8xl z-10 text-white"></span>
                   
                   {/* Property Type Badge */}
-                  <div className="absolute top-4 left-4 glass px-3 py-1 rounded-full text-white text-sm font-medium">
-                    {property.propertyType === 'apartment' ? '🏢' : 
-                     property.propertyType === 'house' ? '🏠' : 
-                     property.propertyType === 'studio' ? '🏘️' : '🛏️'} {property.propertyType}
+                  <div className="absolute top-4 left-4 badge badge-premium">
+                    <span className="icon icon-building mr-1"></span>
+                    {property.propertyType}
                   </div>
                   
                   {/* Listing Type Badge */}
-                  <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-white text-sm font-medium ${
+                  <div className={`absolute top-4 right-4 badge ${
                     property.listingType === 'rent' 
-                      ? 'bg-blue-500 bg-opacity-90' 
-                      : 'bg-green-500 bg-opacity-90'
+                      ? 'badge-info' 
+                      : 'badge-success'
                   }`}>
-                    {property.listingType === 'rent' ? '🏠 For Rent' : '🏡 For Sale'}
+                    <span className={`icon ${property.listingType === 'rent' ? 'icon-key' : 'icon-tag'} mr-1`}></span>
+                    {property.listingType === 'rent' ? 'For Rent' : 'For Sale'}
                   </div>
 
                   {/* Verified Badge */}
-                  <div className="absolute bottom-4 left-4 bg-green-500 bg-opacity-90 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                    ✅ Verified
+                  <div className="absolute bottom-4 left-4 status-verified">
+                    <span className="icon icon-verified mr-1"></span>
+                    Verified
                   </div>
                 </div>
                 
                 <div className="p-6 relative z-10">
-                  <h3 className="text-xl font-bold mb-3 text-gray-800 hover:text-green-600 transition-colors line-clamp-1">
+                  <h3 className="card-title text-heading-md mb-3 hover:text-primary-600 transition-colors line-clamp-1">
                     {property.title}
                   </h3>
                   
-                  <p className="text-gray-600 mb-3 flex items-center gap-2">
-                    📍 <span className="font-medium">{property.location.area}, {property.location.county}</span>
+                  <p className="property-location text-body-md mb-3 flex items-center gap-2">
+                    <span className="icon icon-location"></span>
+                    <span className="font-medium">{property.location.area}, {property.location.county}</span>
                   </p>
                   
-                  <p className="text-gray-600 mb-4 text-sm line-clamp-2 leading-relaxed">
+                  <p className="card-text text-body-sm mb-6 line-clamp-2 leading-relaxed">
                     {property.description}
                   </p>
                   
-                  <div className="flex justify-between items-center mb-4">
+                  <div className="flex justify-between items-center mb-6">
                     <div>
-                      <span className="text-2xl font-bold gradient-text">
+                      <span className="property-price text-2xl font-bold gradient-text-professional">
                         {formatPrice(property)}
                       </span>
                       {property.listingType === 'rent' && (
-                        <span className="text-gray-500 text-sm">/month</span>
+                        <span className="text-neutral-500 text-body-sm">/month</span>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full font-medium">
-                        🛏️ {property.bedrooms}
+                    <div className="flex items-center gap-2">
+                      <span className="badge badge-info">
+                        <span className="icon icon-bed mr-1"></span>
+                        {property.bedrooms}
                       </span>
-                      <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full font-medium">
-                        🚿 {property.bathrooms}
+                      <span className="badge badge-success">
+                        <span className="icon icon-bath mr-1"></span>
+                        {property.bathrooms}
                       </span>
                     </div>
                   </div>
                   
                   <Link
                     to={`/properties/${property._id}`}
-                    className="block w-full text-center btn-modern py-3 hover:scale-105"
+                    className="btn btn-primary w-full justify-center hover-scale focus-professional"
                   >
+                    <span className="icon icon-eye mr-2"></span>
                     View Details & Contact
                   </Link>
                 </div>
@@ -359,12 +386,14 @@ const Properties = () => {
 
         {/* Load More Button */}
         {!loading && properties.length > 0 && properties.length >= 9 && (
-          <div className="text-center mt-12">
-            <button className="btn-modern text-lg px-8 py-4">
-              📄 Load More Properties
+          <div className="text-center mt-16">
+            <button className="btn btn-secondary btn-lg hover-scale focus-professional">
+              <span className="icon icon-plus mr-2"></span>
+              Load More Properties
             </button>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

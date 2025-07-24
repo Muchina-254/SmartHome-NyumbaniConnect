@@ -93,6 +93,11 @@ export const propertyService = {
   getMyListings: async () => {
     const response = await api.get('/properties/my/listings');
     return response.data;
+  },
+
+  updateStatus: async (id, status) => {
+    const response = await api.patch(`/properties/${id}/status`, { status });
+    return response.data;
   }
 };
 

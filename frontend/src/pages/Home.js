@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { propertyService } from '../services/api';
+import HeroSection from '../components/HeroSection';
 
 const Home = () => {
   const [featuredProperties, setFeaturedProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [statsVisible, setStatsVisible] = useState(false);
 
   useEffect(() => {
     const fetchFeaturedProperties = async () => {
       try {
-        const response = await propertyService.getAll({ limit: 3 });
+        const response = await propertyService.getAll({ limit: 6 });
         setFeaturedProperties(response.properties);
       } catch (error) {
         console.error('Error fetching properties:', error);
@@ -20,10 +20,6 @@ const Home = () => {
     };
 
     fetchFeaturedProperties();
-
-    // Trigger stats animation after component mounts
-    const timer = setTimeout(() => setStatsVisible(true), 1000);
-    return () => clearTimeout(timer);
   }, []);
 
   const formatPrice = (property) => {
@@ -38,141 +34,87 @@ const Home = () => {
     }).format(price);
   };
 
-  const stats = [
-    { number: '10,000+', label: 'Properties Listed', icon: '🏠' },
-    { number: '5,000+', label: 'Happy Tenants', icon: '😊' },
-    { number: '1,200+', label: 'Verified Landlords', icon: '✅' },
-    { number: '47', label: 'Counties Covered', icon: '📍' }
-  ];
-
   const features = [
     {
-      icon: '🔍',
-      title: 'Smart Search',
-      description: 'AI-powered search helps you find the perfect home based on your preferences and budget.',
-      color: 'from-blue-500 to-purple-600'
+      icon: 'icon-search',
+      title: 'Smart Property Search',
+      description: 'AI-powered search engine that learns your preferences and finds the perfect home matches across Kenya.',
+      color: 'from-blue-500 to-cyan-500'
     },
     {
-      icon: '🛡️',
-      title: 'Verified Listings',
-      description: 'All properties and landlords are thoroughly verified to ensure authenticity and safety.',
-      color: 'from-green-500 to-teal-600'
+      icon: 'icon-shield',
+      title: 'Verified Listings Only',
+      description: 'Every property and landlord undergoes rigorous verification to ensure authenticity and prevent fraud.',
+      color: 'from-green-500 to-emerald-500'
     },
     {
-      icon: '💸',
-      title: 'Transparent Pricing',
-      description: 'No hidden fees. See all costs upfront including deposit, rent, and service charges.',
-      color: 'from-orange-500 to-red-600'
+      icon: '�',
+      title: 'Premium Experience',
+      description: 'Enjoy white-glove service with dedicated support, virtual tours, and seamless booking process.',
+      color: 'from-purple-500 to-violet-500'
     },
     {
-      icon: '📱',
-      title: 'Mobile First',
-      description: 'Designed for mobile users with offline capabilities and instant notifications.',
-      color: 'from-purple-500 to-pink-600'
+      icon: 'icon-mobile',
+      title: 'Mobile-First Platform',
+      description: 'Native mobile experience with offline search, instant notifications, and GPS-based recommendations.',
+      color: 'from-orange-500 to-red-500'
     },
     {
-      icon: '🤝',
-      title: 'Direct Connect',
-      description: 'Connect directly with property owners and agents without intermediaries.',
-      color: 'from-indigo-500 to-blue-600'
+      icon: 'icon-lightning',
+      title: 'Instant Connections',
+      description: 'Connect directly with verified property owners and agents within minutes, not days.',
+      color: 'from-yellow-500 to-orange-500'
     },
     {
-      icon: '⚡',
-      title: 'Instant Booking',
-      description: 'Book property viewings instantly and get quick responses from landlords.',
-      color: 'from-yellow-500 to-orange-600'
+      icon: 'icon-trophy',
+      title: 'Award-Winning Service',
+      description: 'Recognized as Kenya\'s leading property platform with industry-leading customer satisfaction.',
+      color: 'from-indigo-500 to-blue-500'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Spacer for fixed navbar */}
-      <div className="h-16"></div>
+      <div className="h-20"></div>
 
       {/* Hero Section */}
-      <section className="gradient-hero text-white py-24 relative overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0">
-          <div className="animate-float absolute top-20 left-10 text-6xl opacity-20">🏠</div>
-          <div className="animate-float absolute top-32 right-20 text-4xl opacity-20" style={{animationDelay: '1s'}}>🌟</div>
-          <div className="animate-float absolute bottom-20 left-1/4 text-5xl opacity-20" style={{animationDelay: '2s'}}>🔑</div>
-          <div className="animate-float absolute bottom-32 right-1/3 text-3xl opacity-20" style={{animationDelay: '0.5s'}}>✨</div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
-          <h1 className="text-6xl md:text-7xl font-bold mb-6 animate-fade-in-up hero-text text-shadow-lg">
-            Find Your Perfect
-            <span className="block text-yellow-300">Kenyan Home</span>
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-4xl mx-auto animate-fade-in-up text-shadow opacity-90" style={{animationDelay: '0.2s'}}>
-            SmartNyumba connects you with verified properties, trusted landlords, 
-            and quality rental solutions across all 47 counties in Kenya. Safe, transparent, and mobile-first. 🇰🇪
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up" style={{animationDelay: '0.4s'}}>
-            <Link
-              to="/properties"
-              className="btn-modern text-lg px-10 py-4"
-            >
-              🔍 Explore Properties
-            </Link>
-            <Link
-              to="/register"
-              className="glass border-2 border-white text-white px-10 py-4 rounded-lg font-semibold hover:bg-white hover:text-green-600 transition-all duration-300 hover:scale-105"
-            >
-              🚀 Get Started Free
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div 
-                key={index} 
-                className={`text-center animate-fade-in-up ${statsVisible ? 'opacity-100' : 'opacity-0'}`}
-                style={{animationDelay: `${index * 0.2}s`}}
-              >
-                <div className="text-4xl mb-2">{stat.icon}</div>
-                <div className="text-3xl font-bold gradient-text mb-1">{stat.number}</div>
-                <div className="text-gray-600 font-medium">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* Features Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
+      <section className="section-professional bg-neutral-50">
+        <div className="container-professional">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 animate-fade-in-up">
-              Why Choose <span className="gradient-text">SmartNyumba</span>?
+            <div className="inline-flex items-center gap-2 bg-primary-100 text-primary-700 px-4 py-2 rounded-full text-body-sm font-semibold mb-6 animate-scale-in">
+              <span className="icon icon-star"></span>
+              Why Choose SmartNyumba
+            </div>
+            <h2 className="text-display-lg font-display font-bold text-neutral-900 mb-6 animate-slide-up">
+              Experience the Future of 
+              <span className="gradient-text-professional block">Property Hunting in Kenya</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in-up" style={{animationDelay: '0.2s'}}>
-              Experience the future of property hunting in Kenya with our innovative platform designed for modern renters and landlords.
+            <p className="text-body-lg text-neutral-600 max-w-3xl mx-auto animate-slide-up animate-delay-200">
+              We've reimagined how Kenyans find and secure their perfect homes. Our platform combines cutting-edge 
+              technology with local expertise to deliver an unmatched property experience.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <div 
                 key={index} 
-                className="card-hover glass p-8 rounded-2xl text-center animate-fade-in-up"
+                className="card card-elevated p-8 text-center hover-lift animate-slide-up"
                 style={{animationDelay: `${index * 0.1}s`}}
               >
-                <div className="text-5xl mb-4 animate-bounce-custom" style={{animationDelay: `${index * 0.5}s`}}>
-                  {feature.icon}
+                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r ${feature.color} text-white text-2xl mb-6 animate-pulse-soft`}>
+                  <span className={`icon ${feature.icon} icon-lg text-white`}></span>
                 </div>
-                <h3 className="text-2xl font-bold mb-4 text-gray-800">
+                <h3 className="text-heading-md text-neutral-900 mb-4">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-body-md text-neutral-600 leading-relaxed">
                   {feature.description}
                 </p>
-                <div className={`mt-6 h-1 bg-gradient-to-r ${feature.color} rounded-full mx-auto w-12`}></div>
               </div>
             ))}
           </div>
@@ -180,79 +122,109 @@ const Home = () => {
       </section>
 
       {/* Featured Properties */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-center mb-16">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-4 animate-slide-in-left">
-                Featured <span className="gradient-text">Properties</span>
+      <section className="section-professional bg-white">
+        <div className="container-professional">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-16">
+            <div className="mb-8 lg:mb-0">
+              <div className="inline-flex items-center gap-2 bg-secondary-100 text-secondary-700 px-4 py-2 rounded-full text-body-sm font-semibold mb-6 animate-scale-in">
+                <span>🏆</span>
+                Featured Properties
+              </div>
+              <h2 className="text-display-lg font-display font-bold text-neutral-900 mb-4 animate-slide-up">
+                Handpicked Premium
+                <span className="gradient-text-professional block">Properties</span>
               </h2>
-              <p className="text-xl text-gray-600 animate-slide-in-left" style={{animationDelay: '0.2s'}}>
-                Handpicked premium properties across Kenya 🏆
+              <p className="text-body-lg text-neutral-600 max-w-2xl animate-slide-up animate-delay-200">
+                Discover our carefully curated selection of premium properties across Kenya's most desirable locations.
               </p>
             </div>
             <Link
               to="/properties"
-              className="hidden md:block text-green-600 hover:text-green-700 font-semibold text-lg transition-all duration-300 hover:scale-110 animate-slide-in-right"
+              className="btn btn-secondary hover-scale focus-professional animate-slide-right"
             >
-              View All Properties →
+              <span className="icon icon-eye mr-2"></span>
+              View All Properties
             </Link>
           </div>
 
           {loading ? (
-            <div className="text-center py-16">
-              <div className="spinner mx-auto mb-4"></div>
-              <p className="text-gray-600 text-lg">Loading amazing properties... ✨</p>
+            <div className="text-center py-20">
+              <div className="spinner-professional mx-auto mb-6"></div>
+              <p className="text-body-lg text-neutral-600 font-medium">
+                Loading premium properties...
+              </p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredProperties.map((property, index) => (
                 <div
                   key={property._id}
-                  className="property-card-enhanced animate-fade-in-up"
-                  style={{animationDelay: `${index * 0.2}s`}}
+                  className="property-card-professional animate-slide-up"
+                  style={{animationDelay: `${index * 0.1}s`}}
                 >
-                  <div className="h-56 bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center relative overflow-hidden">
+                  {/* Property Image */}
+                  <div className="h-64 bg-gradient-to-br from-primary-400 via-secondary-500 to-purple-600 relative overflow-hidden">
                     <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-                    <span className="text-white text-6xl z-10">🏠</span>
-                    <div className="absolute top-4 right-4 glass px-3 py-1 rounded-full text-white text-sm font-medium">
-                      {property.listingType === 'rent' ? '🏠 For Rent' : '🏡 For Sale'}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="icon icon-home text-white" style={{fontSize: '4rem'}}></span>
+                    </div>
+                    
+                    {/* Property Type Badge */}
+                    <div className="absolute top-4 left-4 badge badge-premium">
+                      {property.propertyType?.charAt(0).toUpperCase() + property.propertyType?.slice(1)}
+                    </div>
+                    
+                    {/* Listing Type Badge */}
+                    <div className={`absolute top-4 right-4 badge ${
+                      property.listingType === 'rent' ? 'badge-info' : 'badge-success'
+                    }`}>
+                      {property.listingType === 'rent' ? 'For Rent' : 'For Sale'}
+                    </div>
+
+                    {/* Verified Badge */}
+                    <div className="absolute bottom-4 left-4 status-verified">
+                      ✓ Verified
                     </div>
                   </div>
+                  
                   <div className="p-6 relative z-10">
-                    <h3 className="text-xl font-bold mb-3 text-gray-800 hover:text-green-600 transition-colors">
+                    <h3 className="text-heading-md text-neutral-900 mb-3 hover:text-primary-600 transition-colors line-clamp-1">
                       {property.title}
                     </h3>
-                    <p className="text-gray-600 mb-3 flex items-center">
-                      📍 {property.location.area}, {property.location.county}
+                    
+                    <p className="text-body-md text-neutral-600 mb-3 flex items-center gap-2">
+                      <span className="icon icon-location icon-lg"></span>
+                      <span className="font-medium">{property.location.area}, {property.location.county}</span>
                     </p>
-                    <p className="text-gray-600 mb-4 text-sm line-clamp-2 leading-relaxed">
+                    
+                    <p className="text-body-sm text-neutral-600 mb-6 line-clamp-2 leading-relaxed">
                       {property.description}
                     </p>
                     
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex justify-between items-center mb-6">
                       <div>
-                        <span className="text-2xl font-bold gradient-text">
+                        <div className="text-2xl font-bold gradient-text-professional">
                           {formatPrice(property)}
-                        </span>
+                        </div>
                         {property.listingType === 'rent' && (
-                          <span className="text-gray-500 text-sm">/month</span>
+                          <div className="text-body-sm text-neutral-500">per month</div>
                         )}
                       </div>
-                      <div className="flex gap-2">
-                        <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full font-medium">
-                          🛏️ {property.bedrooms} BR
-                        </span>
-                        <span className="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full font-medium">
-                          🚿 {property.bathrooms} BA
-                        </span>
+                      <div className="flex items-center gap-3">
+                        <div className="badge badge-info">
+                          <span className="icon icon-bed mr-1"></span> {property.bedrooms}
+                        </div>
+                        <div className="badge badge-success">
+                          <span className="icon icon-bath mr-1"></span> {property.bathrooms}
+                        </div>
                       </div>
                     </div>
                     
                     <Link
                       to={`/properties/${property._id}`}
-                      className="block w-full text-center btn-modern py-3"
+                      className="btn btn-primary w-full justify-center hover-scale focus-professional"
                     >
+                      <span className="icon icon-eye mr-2"></span>
                       View Details
                     </Link>
                   </div>
@@ -260,47 +232,49 @@ const Home = () => {
               ))}
             </div>
           )}
-
-          <div className="text-center mt-12 md:hidden">
-            <Link
-              to="/properties"
-              className="btn-modern text-lg px-8"
-            >
-              View All Properties
-            </Link>
-          </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 gradient-hero text-white relative overflow-hidden">
+      <section className="section-professional gradient-hero-professional text-white relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="animate-float absolute top-10 left-1/4 text-4xl opacity-30">🌟</div>
-          <div className="animate-float absolute bottom-10 right-1/4 text-5xl opacity-30" style={{animationDelay: '1s'}}>🔑</div>
+          <div className="animate-float absolute top-10 left-1/4 text-4xl opacity-30">
+            <span className="icon icon-star icon-2xl"></span>
+          </div>
+          <div className="animate-float absolute bottom-10 right-1/4 text-5xl opacity-30 animate-delay-300">
+            <span className="icon icon-key icon-3xl"></span>
+          </div>
+          <div className="animate-float absolute top-1/2 left-10 text-3xl opacity-20 animate-delay-500">
+            <span className="icon icon-home icon-xl"></span>
+          </div>
         </div>
         
-        <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 animate-fade-in-up text-shadow-lg">
-            Ready to Find Your 
-            <span className="block text-yellow-300">Dream Home? 🏡</span>
-          </h2>
-          <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto animate-fade-in-up opacity-90" style={{animationDelay: '0.2s'}}>
-            Join thousands of Kenyans who trust SmartNyumba for their housing needs. 
-            Start your journey to the perfect home today! 🚀
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up" style={{animationDelay: '0.4s'}}>
-            <Link
-              to="/register"
-              className="btn-modern text-lg px-10 py-4 bg-white text-green-600 hover:bg-gray-100"
-            >
-              🎯 Start Your Search Today
-            </Link>
-            <Link
-              to="/properties"
-              className="glass border-2 border-white text-white px-10 py-4 rounded-lg font-semibold hover:bg-white hover:text-green-600 transition-all duration-300 hover:scale-105"
-            >
-              🔍 Browse Properties
-            </Link>
+        <div className="container-professional text-center relative z-10">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-display-lg font-display font-bold mb-6 animate-slide-up">
+              Ready to Find Your 
+              <span className="block text-yellow-300">Dream Home?</span>
+            </h2>
+            <p className="text-body-lg mb-12 opacity-95 animate-slide-up animate-delay-200">
+              Join thousands of satisfied Kenyans who found their perfect homes through SmartNyumba. 
+              Start your journey to homeownership or find your ideal rental today.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4 animate-slide-up animate-delay-400">
+              <Link
+                to="/register"
+                className="btn btn-primary btn-lg bg-white text-primary-600 hover:bg-neutral-100 hover-scale focus-professional"
+              >
+                <span className="icon icon-target mr-3"></span>
+                Start Your Search Today
+              </Link>
+              <Link
+                to="/properties"
+                className="btn btn-secondary btn-lg glass-professional border-white border-opacity-50 text-white hover:bg-white hover:text-primary-600 hover-scale focus-professional"
+              >
+                <span className="mr-3 text-xl">🔍</span>
+                Browse Properties
+              </Link>
+            </div>
           </div>
         </div>
       </section>
