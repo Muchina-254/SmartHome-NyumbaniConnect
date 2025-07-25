@@ -1,0 +1,283 @@
+issues:
+  - title: "FR-02: Property Search and Filtering System"
+    description: |
+      # Functional Requirement FR-02: Property Search and Filtering
+
+      ## Description
+      System shall allow tenants to search for properties using filters (location, price, services).
+
+      ## Rationale
+      Ease of discovery is crucial for tenants to find suitable properties quickly and efficiently.
+
+      ## Acceptance Criteria
+      - Search results match input filters accurately
+      - Filter options include location, price range, and available services
+      - Search is responsive and returns results within 2 seconds
+      - Results can be sorted by relevance, price, or date listed
+      - Search handles partial matches and typos gracefully
+
+      ## User Stories
+      As a tenant, I want to search for properties using specific filters so that I can find homes that meet my requirements and budget.
+
+      ## Technical Requirements
+      - Implement robust search functionality with multiple filter options
+      - Add location-based search with map integration
+      - Include price range slider and service checkboxes
+      - Optimize search performance and indexing
+      - Add search result pagination
+
+      ## Test Case Reference
+      TC-02
+
+      ## Priority
+      High
+    labels: ["enhancement", "documentation", "Urgent"]
+    assignees: ["AlvinKiprotich-dev"]
+
+  - title: "FR-03: User Identity Verification System"
+    description: |
+      # Functional Requirement FR-03: User Identity Verification
+
+      ## Description
+      System shall verify identity using ID upload or eCitizen integration.
+
+      ## Rationale
+      Fraud prevention is critical for building trust and ensuring safe transactions on the platform.
+
+      ## Acceptance Criteria
+      - Only verified users can post properties or apply for rentals
+      - ID document upload functionality with validation
+      - eCitizen integration for automated verification (where available)
+      - Verification status clearly displayed on user profiles
+      - Manual review process for edge cases
+
+      ## User Stories
+      As a platform user, I want my identity to be verified so that other users can trust me, and I can trust them in rental transactions.
+
+      ## Technical Requirements
+      - Implement secure document upload with encryption
+      - Integrate with eCitizen API for automated verification
+      - Add manual verification workflow for admin review
+      - Store verification status and documents securely
+      - Implement verification badge system
+
+      ## Test Case Reference
+      TC-03
+
+      ## Priority
+      High
+    labels: ["enhancement", "documentation", "Urgent"]
+    assignees: ["AlvinKiprotich-dev"]
+
+  - title: "FR-04: Property Listing Management System"
+    description: |
+      # Functional Requirement FR-04: Property Listing Management
+
+      ## Description
+      System shall allow landlords to list properties with images, location, rent, and amenities.
+
+      ## Rationale
+      Listing visibility is essential for landlords to showcase their properties and attract potential tenants.
+
+      ## Acceptance Criteria
+      - Properties display all required details (images, location, rent, amenities)
+      - Support for multiple high-quality image uploads
+      - Location integration with maps
+      - Comprehensive amenity selection options
+      - Draft and publish functionality for listings
+
+      ## User Stories
+      As a landlord, I want to create detailed property listings with photos and descriptions so that potential tenants can see what I'm offering.
+
+      ## Technical Requirements
+      - Implement property listing form with validation
+      - Add image upload with compression and optimization
+      - Integrate location services and map display
+      - Create amenity database and selection interface
+      - Add listing management dashboard
+
+      ## Test Case Reference
+      TC-04
+
+      ## Priority
+      High
+    labels: ["enhancement", "documentation", "Urgent"]
+    assignees: ["AlvinKiprotich-dev"]
+
+  - title: "FR-05: Property Application and Lease Initiation System"
+    description: |
+      # Functional Requirement FR-05: Property Application and Lease Initiation
+
+      ## Description
+      System shall allow tenants to apply for listed properties and initiate lease.
+
+      ## Rationale
+      Application process streamlines the rental workflow and provides a structured way for tenants to express interest and begin the leasing process.
+
+      ## Acceptance Criteria
+      - Tenants can digitally apply for properties with required information
+      - Application status tracking (submitted, under review, approved, rejected)
+      - Landlords receive notifications of new applications
+      - Application includes tenant verification and background information
+      - Lease initiation workflow begins upon application approval
+
+      ## User Stories
+      As a tenant, I want to apply for properties digitally so that I can express my interest and begin the rental process efficiently.
+
+      ## Technical Requirements
+      - Implement application form with tenant information collection
+      - Add application status tracking system
+      - Create notification system for landlords
+      - Integrate with verification system
+      - Build lease initiation workflow
+      - Add application management dashboard
+
+      ## Test Case Reference
+      TC-05
+
+      ## Priority
+      High
+    labels: ["enhancement", "documentation", "Urgent"]
+    assignees: ["AlvinKiprotich-dev"]
+
+  - title: "FR-06: Bundled Service Selection System"
+    description: |
+      # Functional Requirement FR-06: Bundled Service Selection
+
+      ## Description
+      System shall support bundled service selection (WiFi, water, etc.).
+
+      ## Rationale
+      Move-in readiness is highly valued by tenants (45.5% prefer move-in ready services) and reduces setup delays.
+
+      ## Acceptance Criteria
+      - Tenant can choose add-on services during application or lease process
+      - Service options include WiFi, water, cleaning, and other utilities
+      - Service providers are integrated for seamless setup
+      - Pricing for bundled services is clearly displayed
+      - Service activation is coordinated with move-in date
+
+      ## User Stories
+      As a tenant, I want to select bundled services like WiFi and water so that my new home is ready when I move in without having to coordinate multiple service providers.
+
+      ## Technical Requirements
+      - Build service selection interface with pricing
+      - Integrate with service provider APIs
+      - Add service activation scheduling
+      - Implement service billing integration
+      - Create service management dashboard
+      - Add service provider onboarding system
+
+      ## Test Case Reference
+      TC-06
+
+      ## Priority
+      Medium
+    labels: ["enhancement", "documentation", "Urgent"]
+    assignees: ["AlvinKiprotich-dev"]
+
+  - title: "FR-07: In-Platform Messaging System"
+    description: |
+      # Functional Requirement FR-07: In-Platform Messaging System
+
+      ## Description
+      System shall allow communication via in-platform messaging.
+
+      ## Rationale
+      Transparency in communication addresses one of the top frustrations (poor communication) identified in market research.
+
+      ## Acceptance Criteria
+      - Messages can be sent and received in real time
+      - Message history is preserved and searchable
+      - Users can communicate within property context
+      - Notification system for new messages
+      - Message status indicators (sent, delivered, read)
+
+      ## User Stories
+      As a tenant/landlord, I want to communicate directly through the platform so that all conversations are documented and I can get quick responses to my questions.
+
+      ## Technical Requirements
+      - Implement real-time messaging with WebSocket or similar
+      - Add message threading by property/application
+      - Build notification system (in-app, email, SMS)
+      - Create message search and filtering
+      - Add file/image sharing in messages
+      - Implement message encryption for privacy
+
+      ## Test Case Reference
+      TC-07
+
+      ## Priority
+      High
+    labels: ["enhancement", "documentation", "Urgent"]
+    assignees: ["AlvinKiprotich-dev"]
+
+  - title: "FR-08: Lease Management System"
+    description: |
+      # Functional Requirement FR-08: Lease Management System
+
+      ## Description
+      System shall allow lease management, renewals, and terminations.
+
+      ## Rationale
+      Efficient lease management reduces administrative overhead and supports smooth tenant transitions.
+
+      ## Acceptance Criteria
+      - Lease agreements are digitally stored and tracked
+      - Lease renewal and termination workflows are available
+      - Notifications for lease expiration, renewal, and termination
+      - Lease history maintained for each property and tenant
+      - Integration with payment and verification systems
+
+      ## User Stories
+      As a tenant/landlord, I want to manage my lease digitally so that I can renew or terminate my lease without paperwork and delays.
+
+      ## Technical Requirements
+      - Build lease agreement storage and retrieval system
+      - Implement digital renewal and termination workflows
+      - Integrate notification system
+      - Add lease history dashboard
+      - Connect with payment and verification modules
+
+      ## Test Case Reference
+      TC-08
+
+      ## Priority
+      High
+    labels: ["enhancement", "documentation", "Urgent"]
+    assignees: ["AlvinKiprotich-dev"]
+
+  - title: "FR-09: Payment Integration System"
+    description: |
+      # Functional Requirement FR-09: Payment Integration System
+
+      ## Description
+      System shall support secure payment integration for rent and services.
+
+      ## Rationale
+      Digital payments increase convenience and reduce late rent/service payments.
+
+      ## Acceptance Criteria
+      - Tenants can pay rent and bundled services online
+      - Support for mobile money, credit/debit cards, and bank transfers
+      - Payment receipts are generated and stored
+      - Integration with lease and service billing modules
+      - System ensures secure and encrypted transactions
+
+      ## User Stories
+      As a tenant, I want to pay rent and services online so that I can transact securely and get instant receipts.
+
+      ## Technical Requirements
+      - Integrate payment gateway APIs (e.g., M-PESA, cards)
+      - Implement payment receipt generation and storage
+      - Add support for recurring payments
+      - Build payment dashboard for tenants and landlords
+      - Ensure PCI DSS compliance and secure storage of payment data
+
+      ## Test Case Reference
+      TC-09
+
+      ## Priority
+      High
+    labels: ["enhancement", "documentation", "Urgent"]
+    assignees: ["AlvinKiprotich-dev"]
