@@ -1,4 +1,38 @@
 issues:
+  - title: "FR-01: User Registration and Authentication System"
+    description: |
+      # Functional Requirement FR-01: User Registration and Authentication
+
+      ## Description
+      System shall allow users to register and log in using email/phone.
+
+      ## Rationale
+      Identity verification is essential for fraud prevention and user trust on the platform.
+
+      ## Acceptance Criteria
+      - User can log in with valid credentials.
+      - Registration process validates email/phone format.
+      - Password requirements are enforced.
+      - Account verification via email/SMS is implemented.
+      - User session management is secure.
+
+      ## Stakeholders
+      - Jane (Tenant): Verified, fraud-free listings and ready-to-move-in homes
+      - David (Landlord): Reliable tenants and minimized vacancy periods
+      - Lydia (Developer): Showcase properties, capture leads, digital buyer engagement
+      - SmartHome Team: User satisfaction, platform adoption, regulatory compliance
+
+      ## User Stories
+      As a tenant/landlord/developer, I want to create an account using my email or phone number so that I can access the SmartHome platform securely.
+
+      ## Test Case Reference
+      TC-01
+
+      ## Priority
+      High
+    labels: ["enhancement", "documentation", "Urgent"]
+    assignees: ["AlvinKiprotich-dev"]
+
   - title: "FR-02: Property Search and Filtering System"
     description: |
       # Functional Requirement FR-02: Property Search and Filtering
@@ -10,21 +44,17 @@ issues:
       Ease of discovery is crucial for tenants to find suitable properties quickly and efficiently.
 
       ## Acceptance Criteria
-      - Search results match input filters accurately
-      - Filter options include location, price range, and available services
-      - Search is responsive and returns results within 2 seconds
-      - Results can be sorted by relevance, price, or date listed
-      - Search handles partial matches and typos gracefully
+      - Search results match input filters.
+      - Filter options include location, price range, and available services.
+      - Search is responsive and returns results within 2 seconds.
+      - Results can be sorted by relevance, price, or date listed.
+      - Search handles partial matches and typos gracefully.
+
+      ## Stakeholders
+      See Section 2
 
       ## User Stories
       As a tenant, I want to search for properties using specific filters so that I can find homes that meet my requirements and budget.
-
-      ## Technical Requirements
-      - Implement robust search functionality with multiple filter options
-      - Add location-based search with map integration
-      - Include price range slider and service checkboxes
-      - Optimize search performance and indexing
-      - Add search result pagination
 
       ## Test Case Reference
       TC-02
@@ -45,21 +75,14 @@ issues:
       Fraud prevention is critical for building trust and ensuring safe transactions on the platform.
 
       ## Acceptance Criteria
-      - Only verified users can post properties or apply for rentals
-      - ID document upload functionality with validation
-      - eCitizen integration for automated verification (where available)
-      - Verification status clearly displayed on user profiles
-      - Manual review process for edge cases
+      - Only verified users can post properties or apply for rentals.
+      - ID document upload functionality with validation.
+      - eCitizen integration for automated verification (where available).
+      - Verification status clearly displayed on user profiles.
+      - Manual review process for edge cases.
 
       ## User Stories
       As a platform user, I want my identity to be verified so that other users can trust me, and I can trust them in rental transactions.
-
-      ## Technical Requirements
-      - Implement secure document upload with encryption
-      - Integrate with eCitizen API for automated verification
-      - Add manual verification workflow for admin review
-      - Store verification status and documents securely
-      - Implement verification badge system
 
       ## Test Case Reference
       TC-03
@@ -89,13 +112,6 @@ issues:
       ## User Stories
       As a landlord, I want to create detailed property listings with photos and descriptions so that potential tenants can see what I'm offering.
 
-      ## Technical Requirements
-      - Implement property listing form with validation
-      - Add image upload with compression and optimization
-      - Integrate location services and map display
-      - Create amenity database and selection interface
-      - Add listing management dashboard
-
       ## Test Case Reference
       TC-04
 
@@ -115,7 +131,7 @@ issues:
       Application process streamlines the rental workflow and provides a structured way for tenants to express interest and begin the leasing process.
 
       ## Acceptance Criteria
-      - Tenants can digitally apply for properties with required information
+      - Tenants can digitally apply for properties and receive application status.
       - Application status tracking (submitted, under review, approved, rejected)
       - Landlords receive notifications of new applications
       - Application includes tenant verification and background information
@@ -123,14 +139,6 @@ issues:
 
       ## User Stories
       As a tenant, I want to apply for properties digitally so that I can express my interest and begin the rental process efficiently.
-
-      ## Technical Requirements
-      - Implement application form with tenant information collection
-      - Add application status tracking system
-      - Create notification system for landlords
-      - Integrate with verification system
-      - Build lease initiation workflow
-      - Add application management dashboard
 
       ## Test Case Reference
       TC-05
@@ -151,34 +159,26 @@ issues:
       Move-in readiness is highly valued by tenants (45.5% prefer move-in ready services) and reduces setup delays.
 
       ## Acceptance Criteria
-      - Tenant can choose add-on services during application or lease process
-      - Service options include WiFi, water, cleaning, and other utilities
-      - Service providers are integrated for seamless setup
-      - Pricing for bundled services is clearly displayed
-      - Service activation is coordinated with move-in date
+      - Tenant can choose add-on services during application or lease process.
+      - Service options include WiFi, water, cleaning, and other utilities.
+      - Service providers are integrated for seamless setup.
+      - Pricing for bundled services is clearly displayed.
+      - Service activation is coordinated with move-in date.
 
       ## User Stories
       As a tenant, I want to select bundled services like WiFi and water so that my new home is ready when I move in without having to coordinate multiple service providers.
-
-      ## Technical Requirements
-      - Build service selection interface with pricing
-      - Integrate with service provider APIs
-      - Add service activation scheduling
-      - Implement service billing integration
-      - Create service management dashboard
-      - Add service provider onboarding system
 
       ## Test Case Reference
       TC-06
 
       ## Priority
-      Medium
+      High
     labels: ["enhancement", "documentation", "Urgent"]
     assignees: ["AlvinKiprotich-dev"]
 
   - title: "FR-07: In-Platform Messaging System"
     description: |
-      # Functional Requirement FR-07: In-Platform Messaging System
+      # Functional Requirement FR-07: In-Platform Messaging
 
       ## Description
       System shall allow communication via in-platform messaging.
@@ -187,22 +187,14 @@ issues:
       Transparency in communication addresses one of the top frustrations (poor communication) identified in market research.
 
       ## Acceptance Criteria
-      - Messages can be sent and received in real time
-      - Message history is preserved and searchable
-      - Users can communicate within property context
-      - Notification system for new messages
-      - Message status indicators (sent, delivered, read)
+      - Messages can be sent and received in real time.
+      - Message history is preserved and searchable.
+      - Users can communicate within property context.
+      - Notification system for new messages.
+      - Message status indicators (sent, delivered, read).
 
       ## User Stories
       As a tenant/landlord, I want to communicate directly through the platform so that all conversations are documented and I can get quick responses to my questions.
-
-      ## Technical Requirements
-      - Implement real-time messaging with WebSocket or similar
-      - Add message threading by property/application
-      - Build notification system (in-app, email, SMS)
-      - Create message search and filtering
-      - Add file/image sharing in messages
-      - Implement message encryption for privacy
 
       ## Test Case Reference
       TC-07
@@ -210,34 +202,26 @@ issues:
       ## Priority
       High
     labels: ["enhancement", "documentation", "Urgent"]
-    assignees: ["AlvinKiprotich-dev"]
+    assignees: ["Muchina-254"]
 
-  - title: "FR-08: Lease Management System"
+  - title: "FR-08: Digital Lease Agreement System"
     description: |
-      # Functional Requirement FR-08: Lease Management System
+      # Functional Requirement FR-08: Digital Lease Agreement
 
       ## Description
-      System shall allow lease management, renewals, and terminations.
+      System shall generate digital lease agreements with e-signature.
 
       ## Rationale
-      Efficient lease management reduces administrative overhead and supports smooth tenant transitions.
+      Contractual clarity for both parties.
 
       ## Acceptance Criteria
-      - Lease agreements are digitally stored and tracked
-      - Lease renewal and termination workflows are available
-      - Notifications for lease expiration, renewal, and termination
-      - Lease history maintained for each property and tenant
-      - Integration with payment and verification systems
+      - Both parties can view and sign lease online.
+      - Lease agreement is stored digitally and securely.
+      - E-signature functionality is compliant with regulations.
+      - Lease status and history is visible.
 
       ## User Stories
-      As a tenant/landlord, I want to manage my lease digitally so that I can renew or terminate my lease without paperwork and delays.
-
-      ## Technical Requirements
-      - Build lease agreement storage and retrieval system
-      - Implement digital renewal and termination workflows
-      - Integrate notification system
-      - Add lease history dashboard
-      - Connect with payment and verification modules
+      As a tenant or landlord, I want to sign leases online so that I can avoid paperwork and streamline the move-in process.
 
       ## Test Case Reference
       TC-08
@@ -245,34 +229,28 @@ issues:
       ## Priority
       High
     labels: ["enhancement", "documentation", "Urgent"]
-    assignees: ["AlvinKiprotich-dev"]
+    assignees: ["Muchina-254"]
 
   - title: "FR-09: Payment Integration System"
     description: |
-      # Functional Requirement FR-09: Payment Integration System
+      # Functional Requirement FR-09: Payment Integration
 
       ## Description
-      System shall support secure payment integration for rent and services.
+      System shall allow payment of rent via MPESA or card.
 
       ## Rationale
       Digital payments increase convenience and reduce late rent/service payments.
 
       ## Acceptance Criteria
-      - Tenants can pay rent and bundled services online
-      - Support for mobile money, credit/debit cards, and bank transfers
-      - Payment receipts are generated and stored
-      - Integration with lease and service billing modules
-      - System ensures secure and encrypted transactions
+      - Tenants can pay rent and bundled services online.
+      - Support for mobile money (MPESA), credit/debit cards.
+      - Payment receipts are generated and stored.
+      - Integration with lease and service billing modules.
+      - System ensures secure and encrypted transactions.
+      - Payments are reflected in system.
 
       ## User Stories
       As a tenant, I want to pay rent and services online so that I can transact securely and get instant receipts.
-
-      ## Technical Requirements
-      - Integrate payment gateway APIs (e.g., M-PESA, cards)
-      - Implement payment receipt generation and storage
-      - Add support for recurring payments
-      - Build payment dashboard for tenants and landlords
-      - Ensure PCI DSS compliance and secure storage of payment data
 
       ## Test Case Reference
       TC-09
