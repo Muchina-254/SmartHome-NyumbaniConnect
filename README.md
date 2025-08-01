@@ -2,7 +2,7 @@
 
 SmartHome is a mobile-first digital platform that transforms the Kenyan real estate experience by offering verified property listings, tenant-landlord matching, and seamless service integration. Designed to solve fraud, long vacancy periods, and inefficient communication, SmartNyumba modernizes how property is rented, managed, and moved into.
 
-## 🚨 Market Need
+##  Market Need
 
 Kenya’s rental and property sales market suffers from:
 - Fraudulent listings by fake landlords or agents
@@ -12,17 +12,17 @@ Kenya’s rental and property sales market suffers from:
 
 With over 3 million urban renters and 80%+ smartphone penetration, there is a major opportunity to digitize this sector through a secure, transparent, and mobile solution.
 
-## 💡 Project Value
+##  Project Value
 
 SmartNyumba offers:
-- ✅ Verified listings and user ID verification
-- ✅ Smart property search and match
-- ✅ Integrated service providers (e.g., internet, water)
-- ✅ Lease management and digital communication
-- ✅ Secure landlord-tenant-developer collaboration
-- ✅ Mobile-first access for convenience
+-  Verified listings and user ID verification
+-  Smart property search and match
+-  Integrated service providers (e.g., internet, water)
+-  Lease management and digital communication
+-  Secure landlord-tenant-developer collaboration
+-  Mobile-first access for convenience
 
-## 👥 Target Users
+##  Target Users
 
 ### Primary Users
 - **Tenants** – Seeking verified, ready-to-move-in properties
@@ -37,7 +37,7 @@ SmartNyumba offers:
 
 
 
-## 📦 Use Cases
+##  Use Cases
 - Tenants safely finding genuine, ready-to-move-in rentals
 - Landlords reducing vacancy and finding verified tenants
 - Developers engaging directly with potential buyers
@@ -45,14 +45,14 @@ SmartNyumba offers:
 
 
 
-## 🛠️ How to Run the Project
+## 🛠 How to Run the Project
 
 _Will be updated once code is ready._  
 Project will be structured using a MERN stack and deployed via Firebase and GitHub Actions.
 
 
 
-## 👩🏽‍💻 Team Members
+##  Team Members
 
 | Name            | Role                       | GitHub Handle     | Responsibilities                             |
 |-----------------|----------------------------|-------------------|----------------------------------------------|
@@ -63,7 +63,7 @@ Project will be structured using a MERN stack and deployed via Firebase and GitH
 
 
 
-## 🗓️ Project Timeline
+##  Project Timeline
 
 ### Phase 1: MVP Development *(June–July 2025)*
 - Property listings
@@ -89,7 +89,7 @@ Project will be structured using a MERN stack and deployed via Firebase and GitH
 - 5,000+ listings goal
 
 
-## 🧭 Project Board
+##  Project Board
 
 Access the project roadmap and sprint planning on our GitHub Project Board:  
 🔗 [SmartNyumba Project Board](https://github.com/your-repo-link/project-board)
@@ -102,7 +102,7 @@ Access the project roadmap and sprint planning on our GitHub Project Board:
 - **Done** – Completed tasks/features
 
 
-## 🏁 Sprint Schedule
+##  Sprint Schedule
 
 - **Sprint Duration:** 2 weeks  
 - **Planning:** Bi-weekly on Monday  
@@ -110,12 +110,12 @@ Access the project roadmap and sprint planning on our GitHub Project Board:
 - **Standups:** Mon, Wed, Fri (virtual)
 
 
-## 📌 License
+##  License
 
 This project is licensed under the MIT License.
 
 
-## ❤️ Built for
+##  Built for
 
 Kenya’s real estate community—tenants, landlords, and developers—seeking a safer, smarter, and more efficient way to connect and transact.
 
