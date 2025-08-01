@@ -3,7 +3,7 @@ import yaml
 import os
 
 REPO = "Muchina-254/SmartHome-NyumbaniConnect"
-TOKEN = os.environ["GH_TOKEN"]
+TOKEN = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
 
 with open(".github/fr_issues.yaml", "r") as f:
     issues = yaml.safe_load(f)
