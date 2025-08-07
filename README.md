@@ -92,7 +92,7 @@ Project will be structured using a MERN stack and deployed via Firebase and GitH
 ##  Project Board
 
 Access the project roadmap and sprint planning on our GitHub Project Board:  
-🔗 [SmartNyumba Project Board](https://github.com/your-repo-link/project-board)
+🔗 [SmartNyumba Project Board]([https://github.com/your-repo-link/project-board](https://github.com/users/Abdel-Karim-cmds/projects/3/views/1))
 
 ### Board Structure
 - **Backlog** – Unprioritized ideas  
