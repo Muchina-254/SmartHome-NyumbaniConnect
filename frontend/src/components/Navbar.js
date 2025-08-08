@@ -43,7 +43,7 @@ const Navbar = ({ user, setUser }) => {
         {user ? (
           // When user is logged in: Show only Logout button
           <button onClick={handleLogout} className="nav-link logout-btn">
-            🚪 Logout
+              Logout
           </button>
         ) : (
           // When user is NOT logged in: Show Get Started dropdown
