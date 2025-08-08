@@ -4,25 +4,53 @@ import './Listings.css';
 
 const Listings = () => {
   const [properties, setProperties] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
+    // Get current user from localStorage
+    const token = localStorage.getItem('token');
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setCurrentUser(JSON.parse(userData));
+    }
+
+    // Fetch properties
     axios.get('http://localhost:5000/api/properties')
       .then(res => setProperties(res.data))
       .catch(err => console.error(err));
   }, []);
 
-  const handleVerify = async (id) => {
+  const handleVerify = async (id, isVerified) => {
     try {
-      await axios.patch(`http://localhost:5000/api/properties/${id}/verify`, {}, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+      const endpoint = isVerified ? 'unverify' : 'verify';
+      const apiUrl = `http://localhost:5000/api/admin/properties/${id}/${endpoint}`;
+      
+      await axios.patch(apiUrl, 
+        isVerified ? { reason: 'Admin decision' } : {}, 
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
         }
-      });
-      window.location.reload();
+      );
+      
+      // Refresh properties list
+      const updatedProperties = await axios.get('http://localhost:5000/api/properties');
+      setProperties(updatedProperties.data);
+      
+      alert(isVerified ? 'Property unverified successfully' : 'Property verified successfully');
     } catch (err) {
-      alert("Verification failed");
+      console.error('Verification error:', err);
+      if (err.response?.status === 403) {
+        alert("Access denied. Admin privileges required.");
+      } else {
+        alert("Verification failed. Please try again.");
+      }
     }
   };
+
+  // Check if current user is admin
+  const isAdmin = currentUser?.role === 'Admin';
 
   return (
     <div className="listings-container">
@@ -38,7 +66,19 @@ const Listings = () => {
             <h3>{prop.title}</h3>
             <p>{prop.location}</p>
             <p><strong>KES {prop.price.toLocaleString()}</strong></p>
-            {prop.verified && <span className="verified-tag">✔ Verified</span>}
+            
+            {/* Enhanced verified indicator */}
+            <div className="verification-status">
+              {prop.verified ? (
+                <span className="verified-badge">
+                  ✅ Verified Property
+                </span>
+              ) : (
+                <span className="pending-badge">
+                  ⏳ Pending Verification
+                </span>
+              )}
+            </div>
             <iframe
               src={`https://www.google.com/maps?q=${encodeURIComponent(prop.location)}&output=embed`}
               width="100%"
@@ -47,9 +87,26 @@ const Listings = () => {
               loading="lazy"
               title="Map"
             ></iframe>
-            <button onClick={() => handleVerify(prop._id)}>
-              {prop.verified ? 'Unverify' : 'Verify'}
-            </button>
+            
+            {/* Admin-only verification buttons */}
+            {isAdmin && (
+              <button 
+                onClick={() => handleVerify(prop._id, prop.verified)}
+                style={{
+                  background: prop.verified ? '#ef4444' : '#10b981',
+                  color: '#fff',
+                  marginBottom: '8px',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  width: '100%'
+                }}
+              >
+                {prop.verified ? 'Unverify Property' : 'Verify Property'}
+              </button>
+            )}
+            
             <button
               style={{ background: '#10b981', color: '#fff' }}
               onClick={() => window.open('https://buy.stripe.com/test_dummy_link', '_blank')}

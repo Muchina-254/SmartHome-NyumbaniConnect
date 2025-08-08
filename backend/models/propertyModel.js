@@ -45,6 +45,28 @@ const propertySchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  verifiedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null
+  },
+  verifiedAt: {
+    type: Date,
+    default: null
+  },
+  unverificationReason: {
+    type: String,
+    default: null
+  },
+  unverifiedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null
+  },
+  unverifiedAt: {
+    type: Date,
+    default: null
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

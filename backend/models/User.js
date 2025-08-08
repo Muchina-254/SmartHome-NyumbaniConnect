@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['Landlord', 'Tenant', 'Developer', 'Agent'],
+    enum: ['Landlord', 'Tenant', 'Developer', 'Agent', 'Admin'],
     required: true
   }
 }, {

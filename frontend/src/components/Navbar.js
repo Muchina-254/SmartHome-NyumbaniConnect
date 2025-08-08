@@ -16,6 +16,10 @@ const Navbar = ({ user, setUser }) => {
     return user && ['Landlord', 'Developer', 'Agent'].includes(user.role);
   };
 
+  const isAdmin = (user) => {
+    return user && user.role === 'Admin';
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-left">
@@ -30,6 +34,9 @@ const Navbar = ({ user, setUser }) => {
             <Link to="/my-listings" className="nav-link">My Properties</Link>
             <Link to="/add" className="nav-link">Add Property</Link>
           </>
+        )}
+        {isAdmin(user) && (
+          <Link to="/admin" className="nav-link" style={{color: '#fbbf24'}}>Admin Panel</Link>
         )}
       </div>
 
@@ -54,8 +61,8 @@ const Navbar = ({ user, setUser }) => {
 
             {dropdownOpen && (
               <div className="dropdown-menu">
-                <Link to="/login" className="dropdown-item">🔐 Login</Link>
-                <Link to="/register" className="dropdown-item">📝 Register</Link>
+                <Link to="/login" className="dropdown-item"> Login</Link>
+                <Link to="/register" className="dropdown-item"> Register</Link>
                 <Link to="/about" className="dropdown-item">ℹ️ About Us</Link>
               </div>
             )}

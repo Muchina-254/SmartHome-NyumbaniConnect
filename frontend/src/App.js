@@ -18,6 +18,7 @@ import Listings from './pages/Listings';
 import MyListings from './pages/MyListings';
 import AddProperty from './pages/AddProperty';
 import PropertyDetail from './pages/PropertyDetail';
+import AdminDashboard from './pages/AdminDashboard';
 
 import './App.css';
 
@@ -81,6 +82,13 @@ function App() {
           path="/add" 
           element={
             canManageProperties(user) ? <AddProperty /> : 
+            user ? <Navigate to="/" /> : <Navigate to="/login" />
+          } 
+        />
+        <Route 
+          path="/admin" 
+          element={
+            user?.role === 'Admin' ? <AdminDashboard /> : 
             user ? <Navigate to="/" /> : <Navigate to="/login" />
           } 
         />

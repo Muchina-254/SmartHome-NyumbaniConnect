@@ -90,17 +90,47 @@ iframe {
   margin-top: 10px;
 }
 
-.verified-tag {
-  background-color: #28a745;
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 5px;
-  font-size: 12px;
-  font-weight: 600;
-  width: fit-content;
-  margin-top: 5px;
+/* Enhanced Verification Status */
+.verification-status {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.verified-badge {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+  text-align: center;
+  width: 100%;
+  justify-content: center;
+}
+
+.pending-badge {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+  text-align: center;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Legacy verified tag (keep for backward compatibility) */
 .verified-tag {
   background-color: #10b981;
   color: white;
