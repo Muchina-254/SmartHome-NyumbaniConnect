@@ -1,0 +1,42 @@
+.offer-container {
+  padding: 50px 30px;
+  background: #eef3f9;
+  text-align: center;
+}
+
+.offer-container h2 {
+  margin-bottom: 30px;
+  font-size: 2rem;
+  color: #333;
+}
+
+.offer-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.offer-card {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  width: 260px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease;
+}
+
+.offer-card:hover {
+  transform: translateY(-5px);
+}
+
+.offer-card .icon {
+  font-size: 2rem;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.offer-card h4 {
+  margin-bottom: 10px;
+  color: #333;
+}
