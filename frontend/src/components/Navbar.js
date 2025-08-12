@@ -55,10 +55,21 @@ const Navbar = ({ user, setUser }) => {
         )}
 
         {user ? (
-          // When user is logged in: Show only Logout button
-          <button onClick={handleLogout} className="nav-link logout-btn">
-              Logout
-          </button>
+          // When user is logged in: Show user dropdown
+          <div className="dropdown">
+            <button onClick={() => setDropdownOpen(!dropdownOpen)} className="dropdown-btn">
+              Account ▾
+            </button>
+
+            {dropdownOpen && (
+              <div className="dropdown-menu">
+                <Link to="/profile" className="dropdown-item">👤 Profile</Link>
+                <button onClick={handleLogout} className="dropdown-item logout-btn">
+                  🚪 Logout
+                </button>
+              </div>
+            )}
+          </div>
         ) : (
           // When user is NOT logged in: Show Get Started dropdown
           <div className="dropdown">

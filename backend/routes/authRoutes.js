@@ -86,4 +86,116 @@ router.get('/verify', authMiddleware, async (req, res) => {
   }
 });
 
+// GET PROFILE
+router.get('/profile', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Get user's property count
+    const Property = require('../models/propertyModel');
+    const propertyCount = await Property.countDocuments({ 
+      $or: [{ userId: user._id }, { user: user._id }] 
+    });
+
+    res.json({
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      },
+      stats: {
+        propertiesListed: propertyCount,
+        memberSince: user.createdAt
+      }
+    });
+  } catch (err) {
+    console.error('Profile fetch error:', err);
+    res.status(500).json({ error: 'Failed to fetch profile' });
+  }
+});
+
+// UPDATE PROFILE
+router.put('/profile', authMiddleware, async (req, res) => {
+  try {
+    const { name, phone, role, currentPassword, newPassword } = req.body;
+    
+    // Find the user
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Validate input
+    if (!name || !phone || !role) {
+      return res.status(400).json({ error: 'Name, phone, and role are required' });
+    }
+
+    // Validate role
+    const validRoles = ['Tenant', 'Landlord', 'Developer', 'Agent', 'Admin'];
+    if (!validRoles.includes(role)) {
+      return res.status(400).json({ error: 'Invalid role specified' });
+    }
+
+    // Check if phone is already taken by another user
+    const existingUser = await User.findOne({ 
+      phone, 
+      _id: { $ne: req.user.userId } 
+    });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Phone number already in use' });
+    }
+
+    // Handle password change if provided
+    if (newPassword) {
+      if (!currentPassword) {
+        return res.status(400).json({ error: 'Current password is required to set new password' });
+      }
+
+      // Verify current password
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ error: 'Current password is incorrect' });
+      }
+
+      // Validate new password
+      if (newPassword.length < 6) {
+        return res.status(400).json({ error: 'New password must be at least 6 characters long' });
+      }
+
+      // Hash new password
+      user.password = await bcrypt.hash(newPassword, 10);
+    }
+
+    // Update user fields
+    user.name = name;
+    user.phone = phone;
+    user.role = role;
+
+    await user.save();
+
+    res.json({
+      message: 'Profile updated successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      }
+    });
+  } catch (err) {
+    console.error('Profile update error:', err);
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
 module.exports = router;

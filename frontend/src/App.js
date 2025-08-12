@@ -20,6 +20,7 @@ import AddProperty from './pages/AddProperty';
 import EditProperty from './pages/EditProperty';
 import PropertyDetail from './pages/PropertyDetail';
 import AdminDashboard from './pages/AdminDashboard';
+import UserProfile from './pages/UserProfile';
 
 import './App.css';
 
@@ -213,6 +214,12 @@ function App() {
           element={
             user?.role === 'Admin' ? <AdminDashboard /> : 
             user ? <Navigate to="/" /> : <Navigate to="/login" />
+          } 
+        />
+        <Route 
+          path="/profile" 
+          element={
+            user ? <UserProfile user={user} setUser={setUser} /> : <Navigate to="/login" />
           } 
         />
         <Route path="/property/:id" element={<PropertyDetail />} />
