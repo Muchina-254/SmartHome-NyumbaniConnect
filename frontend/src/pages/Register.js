@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './Form.css';
 
-const Register = () => {
+const Register = ({ setUser }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',

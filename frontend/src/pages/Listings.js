@@ -8,7 +8,6 @@ const Listings = () => {
 
   useEffect(() => {
     // Get current user from localStorage
-    const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
     if (userData) {
       setCurrentUser(JSON.parse(userData));
@@ -58,14 +57,40 @@ const Listings = () => {
       <div className="listings-scroll">
         {properties.map((prop) => (
           <div className="listing-card" key={prop._id}>
+            {/* Display first image or fallback */}
             <img
-              src={`http://localhost:5000/uploads/${prop.image}`}
+              src={
+                prop.images && prop.images.length > 0
+                  ? `http://localhost:5000/uploads/${prop.images[0]}`
+                  : prop.image
+                  ? `http://localhost:5000/uploads/${prop.image}`
+                  : '/placeholder-image.jpg'
+              }
               alt={prop.title}
               className="listing-image"
             />
+            {/* Image count indicator */}
+            {prop.images && prop.images.length > 1 && (
+              <div className="image-count-badge">
+                📸 {prop.images.length} photos
+              </div>
+            )}
             <h3>{prop.title}</h3>
             <p>{prop.location}</p>
-            <p><strong>KES {prop.price.toLocaleString()}</strong></p>
+            
+            {/* Dynamic price display based on pricing type */}
+            <p>
+              <strong>
+                {prop.priceType === 'fixed' && prop.price
+                  ? `KES ${prop.price.toLocaleString()}`
+                  : prop.priceMin && prop.priceMax
+                  ? `KES ${prop.priceMin.toLocaleString()} - ${prop.priceMax.toLocaleString()}`
+                  : prop.price
+                  ? `KES ${prop.price.toLocaleString()}`
+                  : 'Price on request'
+                }
+              </strong>
+            </p>
             
             {/* Enhanced verified indicator */}
             <div className="verification-status">

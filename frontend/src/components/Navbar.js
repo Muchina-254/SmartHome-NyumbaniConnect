@@ -7,9 +7,16 @@ const Navbar = ({ user, setUser }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.clear();
+    // Clear all authentication data
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setUser(null);
-    navigate('/');
+    
+    // Force page reload to ensure clean state
+    setTimeout(() => {
+      navigate('/');
+      window.location.reload();
+    }, 100);
   };
 
   const canManageProperties = (user) => {

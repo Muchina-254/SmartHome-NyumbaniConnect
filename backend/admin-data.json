@@ -1,0 +1,131 @@
+{
+  "adminUser": {
+    "name": "Alvin Kiprotich",
+    "email": "admin@nyumbaniconnect.com",
+    "phone": "0700000000",
+    "password": "admin123456",
+    "role": "Admin",
+    "createdAt": "2025-08-08T00:00:00.000Z"
+  },
+  "adminCredentials": {
+    "email": "admin@nyumbaniconnect.com",
+    "password": "admin123456"
+  },
+  "adminPermissions": [
+    "view_all_users",
+    "view_all_properties",
+    "verify_properties",
+    "unverify_properties",
+    "access_admin_dashboard",
+    "manage_user_roles",
+    "view_statistics"
+  ],
+  "adminRoutes": [
+    {
+      "method": "GET",
+      "path": "/api/admin/dashboard",
+      "description": "Get admin dashboard statistics"
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/properties",
+      "description": "Get all properties with user data"
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/users",
+      "description": "Get all users"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/admin/properties/:id/verify",
+      "description": "Verify a property"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/admin/properties/:id/unverify",
+      "description": "Unverify a property"
+    }
+  ],
+  "sampleAdminResponse": {
+    "dashboard": {
+      "statistics": {
+        "totalUsers": 17,
+        "totalProperties": 8,
+        "verifiedProperties": 6,
+        "pendingProperties": 2
+      }
+    },
+    "properties": [
+      {
+        "_id": "66b4a123456789abcdef0001",
+        "title": "Kilimani Heights",
+        "description": "Modern 3-bedroom apartment in Kilimani",
+        "location": "Kilimani, Nairobi",
+        "price": 85000,
+        "verified": true,
+        "verifiedAt": "2025-08-08T10:00:00.000Z",
+        "user": {
+          "name": "John Doe",
+          "email": "john@example.com",
+          "role": "Landlord"
+        }
+      },
+      {
+        "_id": "66b4a123456789abcdef0002",
+        "title": "Westlands Penthouse",
+        "description": "Luxury penthouse with city view",
+        "location": "Westlands, Nairobi",
+        "price": 150000,
+        "verified": false,
+        "user": {
+          "name": "Jane Smith",
+          "email": "jane@example.com",
+          "role": "Developer"
+        }
+      }
+    ],
+    "users": [
+      {
+        "_id": "66b4a123456789abcdef1001",
+        "name": "System Administrator",
+        "email": "admin@nyumbaniconnect.com",
+        "phone": "0700000000",
+        "role": "Admin",
+        "createdAt": "2025-08-08T00:00:00.000Z"
+      },
+      {
+        "_id": "66b4a123456789abcdef1002",
+        "name": "John Doe",
+        "email": "john@example.com",
+        "phone": "0712345678",
+        "role": "Landlord",
+        "createdAt": "2025-08-07T15:30:00.000Z"
+      },
+      {
+        "_id": "66b4a123456789abcdef1003",
+        "name": "Jane Smith",
+        "email": "jane@example.com",
+        "phone": "0723456789",
+        "role": "Developer",
+        "createdAt": "2025-08-07T14:20:00.000Z"
+      },
+      {
+        "_id": "66b4a123456789abcdef1004",
+        "name": "Mike Johnson",
+        "email": "mike@example.com",
+        "phone": "0734567890",
+        "role": "Tenant",
+        "createdAt": "2025-08-07T13:10:00.000Z"
+      }
+    ]
+  },
+  "mongodbImportCommand": "mongoimport --db nyumbaniconnect --collection users --file admin-user.json",
+  "setupInstructions": {
+    "step1": "Ensure MongoDB is running on localhost:27017",
+    "step2": "Run 'node server.js' to start the backend server",
+    "step3": "Use the admin credentials to login: admin@nyumbaniconnect.com / admin123456",
+    "step4": "Navigate to Admin Panel after login to access dashboard",
+    "step5": "Admin should have access to all properties and users data"
+  }
+}

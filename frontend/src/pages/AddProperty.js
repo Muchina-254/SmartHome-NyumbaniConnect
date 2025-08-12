@@ -6,13 +6,15 @@ const AddProperty = () => {
   const [form, setForm] = useState({
     title: '',
     location: '',
+    priceType: 'fixed', // 'fixed' or 'range'
+    price: '',
     priceMin: '',
     priceMax: '',
     bedrooms: '',
     bathrooms: '',
     type: 'apartment',
     description: '',
-    image: null
+    images: [] // Changed from image to images array
   });
   
   const [message, setMessage] = useState('');
@@ -27,24 +29,40 @@ const AddProperty = () => {
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setMessage('File size must be less than 5MB');
+    const files = Array.from(e.target.files);
+    
+    console.log('Files selected:', files.length); // Debug log
+    
+    if (files.length === 0) return;
+    
+    // Validate file count (max 5 images)
+    if (files.length > 5) {
+      setMessage('Maximum 5 images allowed');
+      setMessageType('error');
+      return;
+    }
+    
+    // Validate each file
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    
+    for (let file of files) {
+      if (file.size > maxSize) {
+        setMessage(`File "${file.name}" is too large. Each file must be less than 5MB`);
         setMessageType('error');
         return;
       }
-      // Validate file type
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
       if (!allowedTypes.includes(file.type)) {
-        setMessage('Only JPEG, PNG, JPG and WebP images are allowed');
+        setMessage(`File "${file.name}" has unsupported format. Only JPEG, PNG, JPG and WebP images are allowed`);
         setMessageType('error');
         return;
       }
     }
-    setForm({ ...form, image: file });
-    if (message) setMessage('');
+    
+    setForm({ ...form, images: files });
+    setMessage(`${files.length} image(s) selected successfully`);
+    setMessageType('success');
+    setTimeout(() => setMessage(''), 3000);
   };
 
   const validateForm = () => {
@@ -58,16 +76,27 @@ const AddProperty = () => {
       setMessageType('error');
       return false;
     }
-    if (!form.priceMin || !form.priceMax) {
-      setMessage('Both minimum and maximum price are required');
-      setMessageType('error');
-      return false;
+    
+    // Validate pricing based on type
+    if (form.priceType === 'fixed') {
+      if (!form.price) {
+        setMessage('Price is required');
+        setMessageType('error');
+        return false;
+      }
+    } else {
+      if (!form.priceMin || !form.priceMax) {
+        setMessage('Both minimum and maximum price are required for range pricing');
+        setMessageType('error');
+        return false;
+      }
+      if (parseInt(form.priceMin) >= parseInt(form.priceMax)) {
+        setMessage('Maximum price must be higher than minimum price');
+        setMessageType('error');
+        return false;
+      }
     }
-    if (parseInt(form.priceMin) >= parseInt(form.priceMax)) {
-      setMessage('Maximum price must be higher than minimum price');
-      setMessageType('error');
-      return false;
-    }
+    
     if (!form.bedrooms || !form.bathrooms) {
       setMessage('Bedrooms and bathrooms are required');
       setMessageType('error');
@@ -94,24 +123,32 @@ const AddProperty = () => {
 
     const formData = new FormData();
     
-    // Calculate average price for the main price field
-    const avgPrice = (parseInt(form.priceMin) + parseInt(form.priceMax)) / 2;
-    
     formData.append('title', form.title);
     formData.append('location', form.location);
-    formData.append('price', avgPrice);
-    formData.append('priceMin', form.priceMin);
-    formData.append('priceMax', form.priceMax);
     formData.append('bedrooms', form.bedrooms);
     formData.append('bathrooms', form.bathrooms);
     formData.append('type', form.type);
     formData.append('description', form.description);
-    if (form.image) {
-      formData.append('image', form.image);
+    
+    // Handle pricing based on type
+    if (form.priceType === 'fixed') {
+      formData.append('price', form.price);
+      formData.append('priceType', 'fixed');
+    } else {
+      formData.append('priceMin', form.priceMin);
+      formData.append('priceMax', form.priceMax);
+      formData.append('priceType', 'range');
+    }
+
+    // Append multiple images
+    if (form.images && form.images.length > 0) {
+      Array.from(form.images).forEach((image, index) => {
+        formData.append('images', image);
+      });
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/properties', formData, {
+      await axios.post('http://localhost:5000/api/properties', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
@@ -125,27 +162,29 @@ const AddProperty = () => {
       setForm({ 
         title: '', 
         location: '', 
+        priceType: 'fixed',
+        price: '',
         priceMin: '', 
         priceMax: '',
         bedrooms: '',
         bathrooms: '',
         type: 'apartment',
         description: '', 
-        image: null 
+        images: [] 
       });
       
       // Reset file input
-      const fileInput = document.querySelector('input[type="file"]');
+      const fileInput = document.querySelector('#images');
       if (fileInput) fileInput.value = '';
       
     } catch (err) {
       console.error('Property creation error:', err);
       if (err.response?.status === 403) {
-        setMessage('❌ Access denied. Only Landlords, Developers, and Agents can add properties.');
+        setMessage(' Access denied. Only Landlords, Developers, and Agents can add properties.');
       } else if (err.response?.data?.message) {
-        setMessage(`❌ ${err.response.data.message}`);
+        setMessage(` ${err.response.data.message}`);
       } else {
-        setMessage('❌ Failed to add property. Please try again.');
+        setMessage(' Failed to add property. Please try again.');
       }
       setMessageType('error');
     } finally {
@@ -194,38 +233,77 @@ const AddProperty = () => {
             />
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="priceMin">Min Price (KES) *</label>
-              <input
-                id="priceMin"
-                type="number"
-                name="priceMin"
-                placeholder="50,000"
-                value={form.priceMin}
-                onChange={handleChange}
-                min="1"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="priceMax">Max Price (KES) *</label>
-              <input
-                id="priceMax"
-                type="number"
-                name="priceMax"
-                placeholder="80,000"
-                value={form.priceMax}
-                onChange={handleChange}
-                min="1"
-                required
-              />
-            </div>
+          {/* Pricing Type Selection */}
+          <div className="form-group">
+            <label htmlFor="priceType">Pricing Type *</label>
+            <select
+              id="priceType"
+              name="priceType"
+              value={form.priceType}
+              onChange={handleChange}
+              required
+            >
+              <option value="fixed">Fixed Price</option>
+              <option value="range">Price Range</option>
+            </select>
           </div>
 
-          {form.priceMin && form.priceMax && parseInt(form.priceMin) < parseInt(form.priceMax) && (
+          {/* Conditional Price Fields */}
+          {form.priceType === 'fixed' ? (
+            <div className="form-group">
+              <label htmlFor="price">Price (KES) *</label>
+              <input
+                id="price"
+                type="number"
+                name="price"
+                placeholder="65,000"
+                value={form.price}
+                onChange={handleChange}
+                min="1"
+                required
+              />
+            </div>
+          ) : (
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="priceMin">Min Price (KES) *</label>
+                <input
+                  id="priceMin"
+                  type="number"
+                  name="priceMin"
+                  placeholder="50,000"
+                  value={form.priceMin}
+                  onChange={handleChange}
+                  min="1"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="priceMax">Max Price (KES) *</label>
+                <input
+                  id="priceMax"
+                  type="number"
+                  name="priceMax"
+                  placeholder="80,000"
+                  value={form.priceMax}
+                  onChange={handleChange}
+                  min="1"
+                  required
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Price Display */}
+          {form.priceType === 'fixed' && form.price && (
+            <div className="price-display">
+              Fixed Price: KES {parseInt(form.price).toLocaleString()}
+            </div>
+          )}
+          
+          {form.priceType === 'range' && form.priceMin && form.priceMax && parseInt(form.priceMin) < parseInt(form.priceMax) && (
             <div className="price-range-display">
-              💰 Price Range: KES {parseInt(form.priceMin).toLocaleString()} - {parseInt(form.priceMax).toLocaleString()}
+              Price Range: KES {parseInt(form.priceMin).toLocaleString()} - {parseInt(form.priceMax).toLocaleString()}
             </div>
           )}
 
@@ -295,18 +373,45 @@ const AddProperty = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="image">Property Image *</label>
-            <input
-              id="image"
-              type="file"
-              name="image"
-              accept="image/*"
-              onChange={handleFileChange}
-              required
-            />
+            <label htmlFor="images">Property Images *</label>
+            <div className="file-upload-container">
+              <input
+                id="images"
+                type="file"
+                name="images"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                onChange={handleFileChange}
+                multiple
+                required
+                style={{ display: 'none' }}
+                ref={(input) => {
+                  if (input) input.setAttribute('multiple', 'multiple');
+                }}
+              />
+              <button
+                type="button"
+                className="file-upload-btn"
+                onClick={() => document.getElementById('images').click()}
+              >
+                📷 Choose Images (Max 5)
+              </button>
+            </div>
             <small className="help-text">
-              Upload a high-quality image (JPEG, PNG, JPG, WebP - Max 5MB)
+              Upload up to 5 high-quality images (JPEG, PNG, JPG, WebP - Max 5MB each)<br/>
+              <strong>Tip:</strong> Hold Ctrl (Windows) or Cmd (Mac) to select multiple files in the file dialog
             </small>
+            {form.images.length > 0 && (
+              <div className="selected-files">
+                <p>Selected files: <strong>{form.images.length}</strong></p>
+                <ul>
+                  {Array.from(form.images).map((file, index) => (
+                    <li key={index}>
+                      📄 {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           <button 
@@ -321,7 +426,7 @@ const AddProperty = () => {
               </>
             ) : (
               <>
-                🏠 Add Property
+                 Add Property
               </>
             )}
           </button>

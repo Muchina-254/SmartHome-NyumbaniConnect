@@ -44,11 +44,13 @@ const upload = multer({ storage });
 // @route   POST /api/properties
 // @desc    Create new property
 // @access  Private (Landlord, Developer, Agent only)
-router.post('/', authMiddleware, canManageProperties, upload.single('image'), async (req, res) => {
+router.post('/', authMiddleware, canManageProperties, upload.array('images', 5), async (req, res) => {
   try {
+    const imageFilenames = req.files ? req.files.map(file => file.filename) : [];
+    
     const newProperty = new Property({
       ...req.body,
-      image: req.file ? req.file.filename : null,
+      images: imageFilenames, // Changed from 'image' to 'images'
       user: req.user.userId || req.user.id // Handle both JWT token structures
     });
     const saved = await newProperty.save();

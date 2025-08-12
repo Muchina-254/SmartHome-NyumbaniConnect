@@ -86,7 +86,7 @@ const AdminDashboard = () => {
 
       {/* Property Management */}
       <div className="admin-section">
-        <h2>🏠 Property Management</h2>
+        <h2> Property Management</h2>
         <div className="admin-table-container">
           <table className="admin-table">
             <thead>
@@ -140,7 +140,7 @@ const AdminDashboard = () => {
 
       {/* User Management */}
       <div className="admin-section">
-        <h2>👥 User Management</h2>
+        <h2> User Management</h2>
         <div className="admin-table-container">
           <table className="admin-table">
             <thead>

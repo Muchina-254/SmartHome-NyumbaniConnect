@@ -13,15 +13,26 @@ const propertySchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-    required: true
+    required: function() {
+      return this.priceType === 'fixed';
+    }
+  },
+  priceType: {
+    type: String,
+    enum: ['fixed', 'range'],
+    default: 'range'
   },
   priceMin: {
     type: Number,
-    required: false
+    required: function() {
+      return this.priceType === 'range';
+    }
   },
   priceMax: {
     type: Number,
-    required: false
+    required: function() {
+      return this.priceType === 'range';
+    }
   },
   bedrooms: {
     type: Number,
@@ -40,7 +51,9 @@ const propertySchema = new mongoose.Schema({
     type: String,
     trim: true
   },
-  image: String,
+  images: [{
+    type: String
+  }],
   verified: {
     type: Boolean,
     default: false,
