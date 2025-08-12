@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './AddProperty.css';
 
-const AddProperty = () => {
+const EditProperty = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  
   const [form, setForm] = useState({
     title: '',
     location: '',
-    priceType: 'fixed', // 'fixed' or 'range'
+    priceType: 'fixed',
     price: '',
     priceMin: '',
     priceMax: '',
@@ -14,63 +18,107 @@ const AddProperty = () => {
     bathrooms: '',
     type: 'apartment',
     description: '',
-    images: [], // Changed from image to images array
+    existingImages: [], // Current images from database
+    newImages: [], // New images to be added
     contactName: '',
     contactPhone: '',
     contactEmail: ''
   });
   
   const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState(''); // 'success', 'error', 'loading'
+  const [messageType, setMessageType] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch existing property data
+  useEffect(() => {
+    const fetchProperty = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`http://localhost:5000/api/properties/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        const property = response.data;
+        setForm({
+          title: property.title || '',
+          location: property.location || '',
+          priceType: property.priceType || (property.priceMin && property.priceMax ? 'range' : 'fixed'),
+          price: property.price || '',
+          priceMin: property.priceMin || '',
+          priceMax: property.priceMax || '',
+          bedrooms: property.bedrooms || '',
+          bathrooms: property.bathrooms || '',
+          type: property.type || 'apartment',
+          description: property.description || '',
+          existingImages: property.images || (property.image ? [property.image] : []),
+          newImages: [],
+          contactName: property.contactName || '',
+          contactPhone: property.contactPhone || '',
+          contactEmail: property.contactEmail || ''
+        });
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching property:', error);
+        setMessage('Failed to load property data');
+        setMessageType('error');
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchProperty();
+    }
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
-    // Clear message when user starts typing
     if (message) setMessage('');
   };
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     
-    console.log('Files selected:', files.length); // Debug log
-    console.log('Files:', files.map(f => f.name)); // Debug log - show filenames
-
     if (files.length === 0) return;
-
-    // Validate file count (max 5 images)
-    if (files.length > 5) {
-      alert('You can only upload up to 5 images at once. Please select fewer files.');
-      e.target.value = ''; // Reset the input
+    
+    // Validate total image count (existing + new)
+    const totalImages = form.existingImages.length + files.length;
+    if (totalImages > 5) {
+      setMessage(`Maximum 5 images allowed. You have ${form.existingImages.length} existing images.`);
+      setMessageType('error');
       return;
     }
-
+    
     // Validate each file
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
     const maxSize = 5 * 1024 * 1024; // 5MB
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-
+    
     for (let file of files) {
       if (file.size > maxSize) {
-        setMessage(`File "${file.name}" is too large. Each file must be less than 5MB`);
-        e.target.value = ''; // Reset the input
+        setMessage('Each file must be less than 5MB');
+        setMessageType('error');
         return;
       }
       if (!allowedTypes.includes(file.type)) {
-        setMessage(`File "${file.name}" has unsupported format. Only JPEG, PNG, JPG and WebP images are allowed`);
-        e.target.value = ''; // Reset the input
+        setMessage('Only JPEG, PNG, JPG and WebP images are allowed');
+        setMessageType('error');
         return;
       }
     }
-
-    setForm({ ...form, images: files });
-    setMessage(`${files.length} image(s) selected successfully`);
+    
+    setForm({ ...form, newImages: files });
+    if (message) setMessage('');
   };
 
-  const removeImage = (indexToRemove) => {
-    const newImages = Array.from(form.images).filter((_, index) => index !== indexToRemove);
-    setForm({ ...form, images: newImages });
-    setMessage(`Image removed. ${newImages.length} image(s) remaining`);
+  const removeExistingImage = (index) => {
+    const updatedImages = form.existingImages.filter((_, i) => i !== index);
+    setForm({ ...form, existingImages: updatedImages });
+  };
+
+  const removeNewImage = (index) => {
+    const updatedImages = Array.from(form.newImages).filter((_, i) => i !== index);
+    setForm({ ...form, newImages: updatedImages });
   };
 
   const validateForm = () => {
@@ -120,85 +168,71 @@ const AddProperty = () => {
 
     const token = localStorage.getItem('token');
     if (!token) {
-      setMessage('You must be logged in to post a property');
+      setMessage('You must be logged in to edit properties');
       setMessageType('error');
       return;
     }
 
     setIsSubmitting(true);
-    setMessage('Creating your property listing...');
+    setMessage('Updating your property...');
     setMessageType('loading');
 
-    const formData = new FormData();
-    
-    formData.append('title', form.title);
-    formData.append('location', form.location);
-    formData.append('bedrooms', form.bedrooms);
-    formData.append('bathrooms', form.bathrooms);
-    formData.append('type', form.type);
-    formData.append('description', form.description);
-    formData.append('contactName', form.contactName);
-    formData.append('contactPhone', form.contactPhone);
-    formData.append('contactEmail', form.contactEmail);
-    
-    // Handle pricing based on type
-    if (form.priceType === 'fixed') {
-      formData.append('price', form.price);
-      formData.append('priceType', 'fixed');
-    } else {
-      formData.append('priceMin', form.priceMin);
-      formData.append('priceMax', form.priceMax);
-      formData.append('priceType', 'range');
-    }
-
-    // Append multiple images
-    if (form.images && form.images.length > 0) {
-      Array.from(form.images).forEach((image, index) => {
-        formData.append('images', image);
-      });
-    }
-
     try {
-      await axios.post('http://localhost:5000/api/properties', formData, {
+      const formData = new FormData();
+      
+      formData.append('title', form.title);
+      formData.append('location', form.location);
+      formData.append('bedrooms', form.bedrooms);
+      formData.append('bathrooms', form.bathrooms);
+      formData.append('type', form.type);
+      formData.append('description', form.description);
+      formData.append('contactName', form.contactName);
+      formData.append('contactPhone', form.contactPhone);
+      formData.append('contactEmail', form.contactEmail);
+      
+      // Handle pricing based on type
+      if (form.priceType === 'fixed') {
+        formData.append('price', form.price);
+        formData.append('priceType', 'fixed');
+      } else {
+        formData.append('priceMin', form.priceMin);
+        formData.append('priceMax', form.priceMax);
+        formData.append('priceType', 'range');
+      }
+
+      // Send existing images that user wants to keep
+      formData.append('existingImages', JSON.stringify(form.existingImages));
+
+      // Append new images with the correct field name
+      if (form.newImages && form.newImages.length > 0) {
+        Array.from(form.newImages).forEach((image) => {
+          formData.append('images', image);
+        });
+      }
+
+      await axios.put(`http://localhost:5000/api/properties/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`
         }
       });
       
-      setMessage(' Property added successfully! Your listing is now live.');
+      setMessage('Property updated successfully!');
       setMessageType('success');
       
-      // Reset form
-      setForm({ 
-        title: '', 
-        location: '', 
-        priceType: 'fixed',
-        price: '',
-        priceMin: '', 
-        priceMax: '',
-        bedrooms: '',
-        bathrooms: '',
-        type: 'apartment',
-        description: '', 
-        images: [],
-        contactName: '',
-        contactPhone: '',
-        contactEmail: ''
-      });
-      
-      // Reset file input
-      const fileInput = document.querySelector('#images');
-      if (fileInput) fileInput.value = '';
+      // Redirect to My Listings after 2 seconds
+      setTimeout(() => {
+        navigate('/my-listings');
+      }, 2000);
       
     } catch (err) {
-      console.error('Property creation error:', err);
-      if (err.response?.status === 403) {
-        setMessage(' Access denied. Only Landlords, Developers, and Agents can add properties.');
-      } else if (err.response?.data?.message) {
-        setMessage(` ${err.response.data.message}`);
+      console.error('Update error:', err);
+      if (err.response) {
+        setMessage(err.response.data?.error || 'Update failed');
+      } else if (err.request) {
+        setMessage('Network error. Please check your connection.');
       } else {
-        setMessage(' Failed to add property. Please try again.');
+        setMessage('An unexpected error occurred');
       }
       setMessageType('error');
     } finally {
@@ -206,14 +240,27 @@ const AddProperty = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="add-property-container">
+        <div className="add-property-card">
+          <div style={{ textAlign: 'center', padding: '40px' }}>
+            <div className="loading-spinner"></div>
+            <p>Loading property data...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="add-property-container">
       <div className="add-property-card">
         <div className="card-header">
-          <h2> Add New Property</h2>
-          <p>Create a new property listing for rent or sale</p>
+          <h2>Edit Property</h2>
+          <p>Update your property listing details</p>
         </div>
-        
+
         {message && (
           <div className={`message ${messageType}`}>
             <span className="message-text">{message}</span>
@@ -305,19 +352,6 @@ const AddProperty = () => {
                   required
                 />
               </div>
-            </div>
-          )}
-
-          {/* Price Display */}
-          {form.priceType === 'fixed' && form.price && (
-            <div className="price-display">
-              Fixed Price: KES {parseInt(form.price).toLocaleString()}
-            </div>
-          )}
-          
-          {form.priceType === 'range' && form.priceMin && form.priceMax && parseInt(form.priceMin) < parseInt(form.priceMax) && (
-            <div className="price-range-display">
-              Price Range: KES {parseInt(form.priceMin).toLocaleString()} - {parseInt(form.priceMax).toLocaleString()}
             </div>
           )}
 
@@ -428,88 +462,99 @@ const AddProperty = () => {
             </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="images">Property Images *</label>
-            <div className="file-upload-container">
-              <input
-                id="images"
-                type="file"
-                name="images"
-                accept="image/jpeg,image/jpg,image/png,image/webp"
-                onChange={handleFileChange}
-                multiple
-                required
-                style={{ display: 'none' }}
-                ref={(input) => {
-                  if (input) input.setAttribute('multiple', 'multiple');
-                }}
-              />
-              <button
-                type="button"
-                className="file-upload-btn"
-                onClick={() => document.getElementById('images').click()}
-              >
-                Choose Images (Max 5)
-              </button>
-              {form.images && form.images.length > 0 && (
-                <div className="selected-files">
-                  <p><strong>Selected Files:</strong></p>
-                  <div className="selected-files-list">
-                    {Array.from(form.images).map((file, index) => (
-                      <div key={index} className="selected-file-item">
-                        <span className="file-name">{file.name}</span>
-                        <button
-                          type="button"
-                          className="remove-file-btn"
-                          onClick={() => removeImage(index)}
-                          aria-label={`Remove ${file.name}`}
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    ))}
+          {/* Existing Images */}
+          {form.existingImages.length > 0 && (
+            <div className="form-group">
+              <label>Current Images ({form.existingImages.length})</label>
+              <div className="existing-images">
+                {form.existingImages.map((image, index) => (
+                  <div key={index} className="existing-image-container">
+                    <img 
+                      src={`http://localhost:5000/uploads/${image}`} 
+                      alt={`Property ${index + 1}`}
+                      className="existing-image"
+                    />
+                    <button 
+                      type="button" 
+                      className="remove-image-btn"
+                      onClick={() => removeExistingImage(index)}
+                      title="Remove this image"
+                    >
+                      ×
+                    </button>
                   </div>
-                </div>
-              )}
+                ))}
+              </div>
+              <small className="help-text">
+                Click the × button to remove an image. Changes will be saved when you update the property.
+              </small>
             </div>
+          )}
+
+          {/* Add New Images */}
+          <div className="form-group">
+            <label htmlFor="newImages">Add More Images</label>
+            <input
+              id="newImages"
+              type="file"
+              name="newImages"
+              accept="image/*"
+              onChange={handleFileChange}
+              multiple
+            />
             <small className="help-text">
-              Upload up to 5 high-quality images (JPEG, PNG, JPG, WebP - Max 5MB each)<br/>
-              <strong>Tip:</strong> Hold Ctrl (Windows) or Cmd (Mac) to select multiple files in the file dialog
+              Add up to {5 - form.existingImages.length} more images (JPEG, PNG, JPG, WebP - Max 5MB each)
             </small>
-            {form.images.length > 0 && (
+            {form.newImages.length > 0 && (
               <div className="selected-files">
-                <p>Selected files: <strong>{form.images.length}</strong></p>
-                <ul>
-                  {Array.from(form.images).map((file, index) => (
-                    <li key={index}>
-                      📄 {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
-                    </li>
+                <p><strong>New files selected ({form.newImages.length}):</strong></p>
+                <div className="selected-files-list">
+                  {Array.from(form.newImages).map((file, index) => (
+                    <div key={index} className="selected-file-item">
+                      <span className="file-name">{file.name}</span>
+                      <button
+                        type="button"
+                        className="remove-file-btn"
+                        onClick={() => removeNewImage(index)}
+                        aria-label={`Remove ${file.name}`}
+                      >
+                        ✕
+                      </button>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             )}
           </div>
 
-          <button 
-            type="submit" 
-            className={`submit-btn ${isSubmitting ? 'loading' : ''}`}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <>
-                <span className="loading-spinner"></span>
-                Creating Property...
-              </>
-            ) : (
-              <>
-                 Add Property
-              </>
-            )}
-          </button>
+          <div className="form-actions">
+            <button 
+              type="button" 
+              className="cancel-btn"
+              onClick={() => navigate('/my-listings')}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              className={`submit-btn ${isSubmitting ? 'loading' : ''}`}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  Updating...
+                </>
+              ) : (
+                'Update Property'
+              )}
+            </button>
+          </div>
         </form>
       </div>
     </div>
   );
 };
 
-export default AddProperty;
+export default EditProperty;

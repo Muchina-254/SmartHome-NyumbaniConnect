@@ -5,6 +5,7 @@ import './Listings.css';
 const Listings = () => {
   const [properties, setProperties] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [currentImageIndexes, setCurrentImageIndexes] = useState({}); // Track current image for each property
 
   useEffect(() => {
     // Get current user from localStorage
@@ -15,9 +16,31 @@ const Listings = () => {
 
     // Fetch properties
     axios.get('http://localhost:5000/api/properties')
-      .then(res => setProperties(res.data))
+      .then(res => {
+        setProperties(res.data);
+        // Initialize image indexes for all properties
+        const initialIndexes = {};
+        res.data.forEach(prop => {
+          initialIndexes[prop._id] = 0;
+        });
+        setCurrentImageIndexes(initialIndexes);
+      })
       .catch(err => console.error(err));
   }, []);
+
+  const nextImage = (propertyId, totalImages) => {
+    setCurrentImageIndexes(prev => ({
+      ...prev,
+      [propertyId]: (prev[propertyId] + 1) % totalImages
+    }));
+  };
+
+  const prevImage = (propertyId, totalImages) => {
+    setCurrentImageIndexes(prev => ({
+      ...prev,
+      [propertyId]: prev[propertyId] === 0 ? totalImages - 1 : prev[propertyId] - 1
+    }));
+  };
 
   const handleVerify = async (id, isVerified) => {
     try {
@@ -55,26 +78,77 @@ const Listings = () => {
     <div className="listings-container">
       <h2>Featured Listings</h2>
       <div className="listings-scroll">
-        {properties.map((prop) => (
-          <div className="listing-card" key={prop._id}>
-            {/* Display first image or fallback */}
-            <img
-              src={
-                prop.images && prop.images.length > 0
-                  ? `http://localhost:5000/uploads/${prop.images[0]}`
-                  : prop.image
-                  ? `http://localhost:5000/uploads/${prop.image}`
-                  : '/placeholder-image.jpg'
-              }
-              alt={prop.title}
-              className="listing-image"
-            />
-            {/* Image count indicator */}
-            {prop.images && prop.images.length > 1 && (
-              <div className="image-count-badge">
-                📸 {prop.images.length} photos
+        {properties.map((prop) => {
+          const images = prop.images && prop.images.length > 0 
+            ? prop.images 
+            : prop.image 
+            ? [prop.image] 
+            : ['default.jpg'];
+          const currentIndex = currentImageIndexes[prop._id] || 0;
+          
+          return (
+            <div className="listing-card" key={prop._id}>
+              {/* Image carousel container */}
+              <div className="listing-image-container">
+                <img
+                  src={`http://localhost:5000/uploads/${images[currentIndex]}`}
+                  alt={`${prop.title} - Image ${currentIndex + 1}`}
+                  className="listing-image"
+                />
+                
+                {/* Navigation arrows - only show if multiple images */}
+                {images.length > 1 && (
+                  <>
+                    <button 
+                      className="listing-nav-arrow prev-arrow"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        prevImage(prop._id, images.length);
+                      }}
+                      aria-label="Previous image"
+                    >
+                      ❮
+                    </button>
+                    <button 
+                      className="listing-nav-arrow next-arrow"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        nextImage(prop._id, images.length);
+                      }}
+                      aria-label="Next image"
+                    >
+                      ❯
+                    </button>
+                  </>
+                )}
+
+                {/* Image counter */}
+                {images.length > 1 && (
+                  <div className="listing-image-counter">
+                    {currentIndex + 1} / {images.length}
+                  </div>
+                )}
+
+                {/* Image dots indicator */}
+                {images.length > 1 && (
+                  <div className="listing-image-dots">
+                    {images.map((_, index) => (
+                      <button
+                        key={index}
+                        className={`dot ${index === currentIndex ? 'active' : ''}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentImageIndexes(prev => ({
+                            ...prev,
+                            [prop._id]: index
+                          }));
+                        }}
+                        aria-label={`Go to image ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
             <h3>{prop.title}</h3>
             <p>{prop.location}</p>
             
@@ -139,7 +213,8 @@ const Listings = () => {
               Pay Now
             </button>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

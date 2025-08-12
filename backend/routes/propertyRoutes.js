@@ -104,10 +104,24 @@ router.patch('/:id/verify', authMiddleware, async (req, res) => {
   }
 });
 
+// @route   GET /api/properties/:id
+// @desc    Get single property by ID
+// @access  Public
+router.get('/:id', async (req, res) => {
+  try {
+    const property = await Property.findById(req.params.id);
+    if (!property) return res.status(404).json({ error: 'Property not found' });
+    res.json(property);
+  } catch (err) {
+    console.error('Get property error:', err);
+    res.status(500).json({ error: 'Failed to fetch property' });
+  }
+});
+
 // @route   PUT /api/properties/:id
 // @desc    Update a property
 // @access  Private
-router.put('/:id', authMiddleware, async (req, res) => {
+router.put('/:id', authMiddleware, upload.array('images', 5), async (req, res) => {
   try {
     // Check if property belongs to user
     const property = await Property.findById(req.params.id);
@@ -116,13 +130,40 @@ router.put('/:id', authMiddleware, async (req, res) => {
       return res.status(403).json({ error: 'Not authorized to update this property' });
     }
 
+    const updateData = { ...req.body };
+
+    // Handle image updates
+    let existingImages = [];
+    if (req.body.existingImages) {
+      // Parse existing images from form data
+      if (typeof req.body.existingImages === 'string') {
+        try {
+          existingImages = JSON.parse(req.body.existingImages);
+        } catch (e) {
+          existingImages = [req.body.existingImages];
+        }
+      } else if (Array.isArray(req.body.existingImages)) {
+        existingImages = req.body.existingImages;
+      }
+    }
+
+    // Add new uploaded images
+    const newImageFilenames = req.files ? req.files.map(file => file.filename) : [];
+    
+    // Combine existing and new images
+    updateData.images = [...existingImages, ...newImageFilenames];
+
+    // Remove existingImages from update data as it's not a model field
+    delete updateData.existingImages;
+
     const updated = await Property.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true }
     );
     res.json(updated);
   } catch (err) {
+    console.error('Update property error:', err);
     res.status(500).json({ error: 'Failed to update property' });
   }
 });

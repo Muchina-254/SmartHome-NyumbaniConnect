@@ -17,6 +17,7 @@ import About from './pages/About';
 import Listings from './pages/Listings';
 import MyListings from './pages/MyListings';
 import AddProperty from './pages/AddProperty';
+import EditProperty from './pages/EditProperty';
 import PropertyDetail from './pages/PropertyDetail';
 import AdminDashboard from './pages/AdminDashboard';
 
@@ -197,6 +198,13 @@ function App() {
           path="/add" 
           element={
             canManageProperties(user) ? <AddProperty /> : 
+            user ? <Navigate to="/" /> : <Navigate to="/login" />
+          } 
+        />
+        <Route 
+          path="/edit/:id" 
+          element={
+            canManageProperties(user) ? <EditProperty /> : 
             user ? <Navigate to="/" /> : <Navigate to="/login" />
           } 
         />

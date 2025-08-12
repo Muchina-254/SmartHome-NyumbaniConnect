@@ -54,6 +54,21 @@ const propertySchema = new mongoose.Schema({
   images: [{
     type: String
   }],
+  contactName: {
+    type: String,
+    required: false,
+    trim: true
+  },
+  contactPhone: {
+    type: String,
+    required: false,
+    trim: true
+  },
+  contactEmail: {
+    type: String,
+    required: false,
+    trim: true
+  },
   verified: {
     type: Boolean,
     default: false,

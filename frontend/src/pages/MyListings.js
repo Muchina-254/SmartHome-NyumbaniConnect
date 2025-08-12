@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Listings.css';
 
 const MyListings = () => {
+  const navigate = useNavigate();
   const [myListings, setMyListings] = useState([]);
 
   const fetchMyListings = () => {
@@ -35,25 +37,7 @@ const MyListings = () => {
   };
 
   const handleEdit = (property) => {
-    const title = prompt('Edit Title:', property.title);
-    const location = prompt('Edit Location:', property.location);
-    const price = prompt('Edit Price:', property.price);
-
-    if (!title || !location || !price) return alert("All fields are required");
-
-    axios.put(`http://localhost:5000/api/properties/${property._id}`, {
-      title, location, price
-    }, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    }).then(() => {
-      alert("Property updated");
-      fetchMyListings();
-    }).catch(err => {
-      console.error(err);
-      alert("Failed to update");
-    });
+    navigate(`/edit/${property._id}`);
   };
 
   return (
@@ -66,9 +50,37 @@ const MyListings = () => {
         ) : (
           myListings.map(property => (
             <div key={property._id} className="listing-card">
-              {property.image ? (
+              {property.images && property.images.length > 0 ? (
+                <div style={{ position: 'relative' }}>
+                  <img
+                    src={`http://localhost:5000/uploads/${property.images[0]}`}
+                    alt={property.title}
+                    style={{
+                      width: '100%',
+                      height: '160px',
+                      objectFit: 'cover',
+                      borderRadius: '8px'
+                    }}
+                  />
+                  {property.images.length > 1 && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '8px',
+                      right: '8px',
+                      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                      color: 'white',
+                      padding: '4px 8px',
+                      borderRadius: '12px',
+                      fontSize: '12px',
+                      fontWeight: 'bold'
+                    }}>
+                      +{property.images.length - 1}
+                    </div>
+                  )}
+                </div>
+              ) : (
                 <img
-                  src={`http://localhost:5000/uploads/${property.image}`}
+                  src="/uploads/default.jpg"
                   alt={property.title}
                   style={{
                     width: '100%',
@@ -77,13 +89,15 @@ const MyListings = () => {
                     borderRadius: '8px'
                   }}
                 />
-              ) : (
-                <div className="no-image">No Image</div>
               )}
 
               <h3>{property.title}</h3>
               <p>{property.location}</p>
-              <p>KES {property.price}</p>
+              <p>
+                KES {property.priceType === 'range' 
+                  ? `${property.priceMin} - ${property.priceMax}` 
+                  : property.price}
+              </p>
               <p style={{ color: property.verified ? 'green' : 'red' }}>
                 {property.verified ? 'Verified' : 'Not Verified'}
               </p>

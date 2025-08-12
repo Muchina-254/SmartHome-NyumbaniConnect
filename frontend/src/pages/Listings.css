@@ -156,3 +156,125 @@ iframe {
   z-index: 1;
 }
 
+/* Listing Image Carousel Styles */
+.listing-image-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 8px 8px 0 0;
+}
+
+.listing-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.listing-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 3;
+  opacity: 0;
+}
+
+.listing-image-container:hover .listing-nav-arrow {
+  opacity: 1;
+}
+
+.listing-nav-arrow:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.prev-arrow {
+  left: 8px;
+}
+
+.next-arrow {
+  right: 8px;
+}
+
+.listing-image-counter {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  z-index: 2;
+}
+
+.listing-image-dots {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  background: white;
+  transform: scale(1.2);
+}
+
+.dot:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .listing-nav-arrow {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+  
+  .prev-arrow {
+    left: 6px;
+  }
+  
+  .next-arrow {
+    right: 6px;
+  }
+  
+  .listing-image-counter {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+  
+  .dot {
+    width: 6px;
+    height: 6px;
+  }
+}
+
