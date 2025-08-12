@@ -222,7 +222,7 @@ function App() {
             user ? <UserProfile user={user} setUser={setUser} /> : <Navigate to="/login" />
           } 
         />
-        <Route path="/property/:id" element={<PropertyDetail />} />
+        <Route path="/property/:id" element={<PropertyDetail user={user} />} />
       </Routes>
       )}
     </Router>

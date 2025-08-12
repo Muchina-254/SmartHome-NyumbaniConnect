@@ -109,7 +109,7 @@ router.patch('/:id/verify', authMiddleware, async (req, res) => {
 // @access  Public
 router.get('/:id', async (req, res) => {
   try {
-    const property = await Property.findById(req.params.id);
+    const property = await Property.findById(req.params.id).populate('user', 'name email');
     if (!property) return res.status(404).json({ error: 'Property not found' });
     res.json(property);
   } catch (err) {

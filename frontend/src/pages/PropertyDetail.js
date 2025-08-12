@@ -1,160 +1,218 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import PropertyImageGallery from '../components/PropertyImageGallery';
-import './Listings.css'; // Reuse existing styles
+import './PropertyDetail.css';
 
-const PropertyDetail = () => {
+const PropertyDetail = ({ user }) => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [property, setProperty] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/properties/${id}`)
-      .then(res => setProperty(res.data))
-      .catch(err => console.error(err));
+    fetchPropertyDetails();
   }, [id]);
 
-  if (!property) return <div style={{ padding: '50px', textAlign: 'center' }}>Loading...</div>;
+  const fetchPropertyDetails = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/properties/${id}`);
+      setProperty(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching property details:', error);
+      setError('Failed to load property details');
+      setLoading(false);
+    }
+  };
 
-  return (
-    <div className="listings-container">
-      <div className="listing-card" style={{ maxWidth: '800px', margin: '40px auto', padding: '30px' }}>
-        
-        {/* Property Image Gallery */}
-        <PropertyImageGallery 
-          images={property.images || (property.image ? [property.image] : [])} 
-          title={property.title}
-        />
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+  };
 
-        <h3 style={{ fontSize: '28px', marginTop: '30px', marginBottom: '20px', color: '#333' }}>
-          {property.title}
-        </h3>
-        
-        <div style={{ display: 'grid', gap: '15px', marginBottom: '25px' }}>
-          <p style={{ fontSize: '18px', color: '#555' }}>
-            <strong>📍 Location:</strong> {property.location}
-          </p>
-          
-          <p style={{ fontSize: '20px', color: '#667eea', fontWeight: 'bold' }}>
-            <strong>💰 Price:</strong> KES {
-              property.priceType === 'range' 
-                ? `${property.priceMin?.toLocaleString()} - ${property.priceMax?.toLocaleString()}` 
-                : property.price?.toLocaleString()
-            }
-          </p>
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
 
-          {property.bedrooms && (
-            <p style={{ fontSize: '16px', color: '#555' }}>
-              <strong>🛏️ Bedrooms:</strong> {property.bedrooms}
-            </p>
-          )}
+  if (loading) {
+    return (
+      <div className="property-detail-container">
+        <div className="loading">Loading property details...</div>
+      </div>
+    );
+  }
 
-          {property.bathrooms && (
-            <p style={{ fontSize: '16px', color: '#555' }}>
-              <strong>🚿 Bathrooms:</strong> {property.bathrooms}
-            </p>
-          )}
-
-          <p style={{ fontSize: '16px', color: '#555' }}>
-            <strong>🏢 Type:</strong> {property.type}
-          </p>
-        </div>
-
-        {property.description && (
-          <div style={{ marginBottom: '25px' }}>
-            <h4 style={{ color: '#333', marginBottom: '10px' }}>📝 Description</h4>
-            <p style={{ fontSize: '16px', lineHeight: '1.6', color: '#666', backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '8px' }}>
-              {property.description}
-            </p>
-          </div>
-        )}
-
-        {/* Contact Information */}
-        {(property.contactName || property.contactPhone || property.contactEmail) && (
-          <div style={{ 
-            marginBottom: '25px', 
-            padding: '20px', 
-            backgroundColor: '#f0f9ff', 
-            borderRadius: '12px',
-            border: '1px solid #e0f2fe'
-          }}>
-            <h4 style={{ color: '#333', marginBottom: '15px', fontSize: '18px' }}>📞 Contact Information</h4>
-            
-            {property.contactName && (
-              <p style={{ fontSize: '16px', color: '#555', marginBottom: '8px' }}>
-                <strong>👤 Name:</strong> {property.contactName}
-              </p>
-            )}
-            
-            {property.contactPhone && (
-              <p style={{ fontSize: '16px', color: '#555', marginBottom: '8px' }}>
-                <strong>📱 Phone:</strong> 
-                <a href={`tel:${property.contactPhone}`} style={{ color: '#667eea', textDecoration: 'none', marginLeft: '5px' }}>
-                  {property.contactPhone}
-                </a>
-              </p>
-            )}
-            
-            {property.contactEmail && (
-              <p style={{ fontSize: '16px', color: '#555', marginBottom: '0' }}>
-                <strong>📧 Email:</strong> 
-                <a href={`mailto:${property.contactEmail}`} style={{ color: '#667eea', textDecoration: 'none', marginLeft: '5px' }}>
-                  {property.contactEmail}
-                </a>
-              </p>
-            )}
-          </div>
-        )}
-
-        {property.verified && (
-          <span
-            style={{
-              display: 'inline-block',
-              marginBottom: '20px',
-              padding: '8px 16px',
-              backgroundColor: '#22c55e',
-              color: '#fff',
-              borderRadius: '8px',
-              fontWeight: 'bold',
-              fontSize: '14px',
-              boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-            }}
-          >
-            ✅ Verified Property
-          </span>
-        )}
-
-        {/* Map */}
-        <div style={{ marginBottom: '25px' }}>
-          <h4 style={{ color: '#333', marginBottom: '15px' }}>🗺️ Location on Map</h4>
-          <iframe
-            src={`https://www.google.com/maps?q=${encodeURIComponent(property.location)}&output=embed`}
-            width="100%"
-            height="300"
-            allowFullScreen=""
-            loading="lazy"
-            title="Property Location"
-            style={{ borderRadius: '12px', border: '1px solid #e5e5e5' }}
-          ></iframe>
-        </div>
-
-        <button
-          style={{
-            marginTop: '20px',
-            backgroundColor: '#10b981',
-            color: '#fff',
-            padding: '10px 16px',
-            fontSize: '16px',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            fontWeight: '500',
-          }}
-          onClick={() => window.open('https://buy.stripe.com/test_dummy_link', '_blank')}
-        >
-          Pay Now
+  if (error) {
+    return (
+      <div className="property-detail-container">
+        <div className="error">{error}</div>
+        <button onClick={() => navigate('/listings')} className="back-button">
+          Back to Listings
         </button>
       </div>
+    );
+  }
+
+  if (!property) {
+    return (
+      <div className="property-detail-container">
+        <div className="error">Property not found</div>
+        <button onClick={() => navigate('/listings')} className="back-button">
+          Back to Listings
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="property-detail-container">
+      <button onClick={() => navigate('/listings')} className="back-button">
+        ← Back to Listings
+      </button>
+
+      <div className="property-detail-content">
+        <div className="property-images">
+          <div 
+            className="main-image"
+            onClick={() => handleImageClick(`http://localhost:5000/uploads/${property.images?.[0] || 'default.jpg'}`)}
+          >
+            <img
+              src={`http://localhost:5000/uploads/${property.images?.[0] || 'default.jpg'}`}
+              alt={property.title}
+              onError={(e) => {
+                e.target.src = `http://localhost:5000/uploads/default.jpg`;
+              }}
+            />
+          </div>
+          
+          {property.images && property.images.length > 1 && (
+            <div className="additional-images">
+              {property.images.slice(1).map((img, index) => (
+                <div 
+                  key={index}
+                  className="thumb-image"
+                  onClick={() => handleImageClick(`http://localhost:5000/uploads/${img}`)}
+                >
+                  <img
+                    src={`http://localhost:5000/uploads/${img}`}
+                    alt={`${property.title} ${index + 2}`}
+                    onError={(e) => {
+                      e.target.src = `http://localhost:5000/uploads/default.jpg`;
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="property-info">
+          <div className="property-header">
+            <h1>{property.title}</h1>
+            <div className="property-price">KSh {property.price?.toLocaleString()}</div>
+            <div className="property-location">📍 {property.location}</div>
+          </div>
+
+          <div className="property-details">
+            <div className="detail-row">
+              <span className="detail-label">Type:</span>
+              <span className="detail-value">{property.type || 'Not specified'}</span>
+            </div>
+            {property.bedrooms && (
+              <div className="detail-row">
+                <span className="detail-label">Bedrooms:</span>
+                <span className="detail-value">{property.bedrooms}</span>
+              </div>
+            )}
+            {property.bathrooms && (
+              <div className="detail-row">
+                <span className="detail-label">Bathrooms:</span>
+                <span className="detail-value">{property.bathrooms}</span>
+              </div>
+            )}
+            <div className="detail-row">
+              <span className="detail-label">Status:</span>
+              <span className={`status ${property.verified ? 'verified' : 'pending'}`}>
+                {property.verified ? 'Verified' : 'Pending Verification'}
+              </span>
+            </div>
+          </div>
+
+          {/* Description - Always visible */}
+          <div className="property-description">
+            <h3>Description</h3>
+            <p>{property.description || 'No description available.'}</p>
+          </div>
+
+          {/* Contact Information - Authentication Required */}
+          <div className="contact-section">
+            <h3>Contact Information</h3>
+            {user ? (
+              <div className="contact-info">
+                <div className="contact-item">
+                  <span className="contact-label">Contact Person:</span>
+                  <span className="contact-value">{property.contactName || property.user?.name || 'Not available'}</span>
+                </div>
+                <div className="contact-item">
+                  <span className="contact-label">Phone:</span>
+                  <span className="contact-value">{property.contactPhone || 'Not available'}</span>
+                </div>
+                <div className="contact-item">
+                  <span className="contact-label">Email:</span>
+                  <span className="contact-value">{property.contactEmail || property.user?.email || 'Not available'}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="login-prompt">
+                <p>Please log in to view contact information</p>
+                <button 
+                  onClick={() => navigate('/login')} 
+                  className="login-button"
+                >
+                  Login to View Contact
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Map */}
+          <div className="property-map">
+            <h3>Location</h3>
+            <div className="map-placeholder">
+              <p>📍 {property.location}</p>
+              <a 
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.location)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="view-on-maps"
+              >
+                View on Google Maps
+              </a>
+            </div>
+          </div>
+
+          {/* Payment Section - Authentication Required */}
+          {user && (
+            <div className="payment-section">
+              <h3>Payment</h3>
+              <button className="pay-button">
+                Pay Now - KSh {property.price?.toLocaleString()}
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <div className="image-modal" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <span className="close-modal" onClick={closeModal}>&times;</span>
+            <img src={selectedImage} alt="Enlarged view" />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

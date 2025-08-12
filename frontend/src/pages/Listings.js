@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Listings.css';
 
@@ -6,6 +7,7 @@ const Listings = () => {
   const [properties, setProperties] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [currentImageIndexes, setCurrentImageIndexes] = useState({}); // Track current image for each property
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Get current user from localStorage
@@ -178,14 +180,6 @@ const Listings = () => {
                 </span>
               )}
             </div>
-            <iframe
-              src={`https://www.google.com/maps?q=${encodeURIComponent(prop.location)}&output=embed`}
-              width="100%"
-              height="150"
-              allowFullScreen=""
-              loading="lazy"
-              title="Map"
-            ></iframe>
             
             {/* Admin-only verification buttons */}
             {isAdmin && (
@@ -207,10 +201,20 @@ const Listings = () => {
             )}
             
             <button
-              style={{ background: '#10b981', color: '#fff' }}
-              onClick={() => window.open('https://buy.stripe.com/test_dummy_link', '_blank')}
+              style={{ 
+                background: '#007bff', 
+                color: '#fff',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                width: '100%',
+                fontSize: '16px',
+                fontWeight: 'bold'
+              }}
+              onClick={() => navigate(`/property/${prop._id}`)}
             >
-              Pay Now
+              View Details
             </button>
           </div>
           );
