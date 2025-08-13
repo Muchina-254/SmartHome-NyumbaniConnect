@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useToast } from '../hooks/useToast';
 import './AddProperty.css';
+import '../styles/toast.css';
 
 const AddProperty = () => {
+  const { showNotification, ToastContainer } = useToast();
   const [form, setForm] = useState({
     title: '',
     location: '',
@@ -60,7 +63,7 @@ const AddProperty = () => {
 
     // Validate file count (max 5 images)
     if (files.length > 5) {
-      alert('You can only upload up to 5 images at once. Please select fewer files.');
+      showNotification('You can only upload up to 5 images at once. Please select fewer files.', 'warning');
       e.target.value = ''; // Reset the input
       return;
     }
@@ -701,6 +704,7 @@ const AddProperty = () => {
           </button>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 };

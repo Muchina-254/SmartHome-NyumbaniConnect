@@ -8,7 +8,7 @@ import Features from './components/Features';
 import WhyChooseUs from './components/WhyChooseUs';
 import FeaturedListings from './components/FeaturedListings';
 import WhatWeOffer from './components/WhatWeOffer';
-import Contact from './components/Contact';
+import ContactPage from './pages/Contact';
 import Footer from './components/Footer';
 
 import Login from './pages/Login';
@@ -179,7 +179,6 @@ function App() {
               <WhyChooseUs />
               <FeaturedListings />
               <WhatWeOffer />
-              <Contact />
               <Footer />
             </>
           }
@@ -187,6 +186,7 @@ function App() {
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/register" element={<Register setUser={setUser} />} />
         <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/listings" element={<Listings />} />
         <Route 
           path="/my-listings" 

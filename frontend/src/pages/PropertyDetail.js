@@ -111,9 +111,20 @@ const PropertyDetail = ({ user }) => {
           <div className="property-header">
             <h1>{property.title}</h1>
             <div className="property-price">
-              KSh {property.price?.toLocaleString()}
-              {property.transactionType === 'rent' && property.rentPeriod && (
-                <span className="price-period">/{property.rentPeriod}</span>
+              {property.priceType === 'range' ? (
+                <>
+                  KSh {property.priceMin?.toLocaleString()} - {property.priceMax?.toLocaleString()}
+                  {property.transactionType === 'rent' && property.rentPeriod && (
+                    <span className="price-period">/{property.rentPeriod}</span>
+                  )}
+                </>
+              ) : (
+                <>
+                  KSh {property.price?.toLocaleString()}
+                  {property.transactionType === 'rent' && property.rentPeriod && (
+                    <span className="price-period">/{property.rentPeriod}</span>
+                  )}
+                </>
               )}
             </div>
             <div className="property-location">📍 {property.location}</div>
@@ -239,17 +250,38 @@ const PropertyDetail = ({ user }) => {
             )}
           </div>
 
-          {/* Map */}
+          {/* Interactive Map */}
           <div className="property-map">
-            <h3>Location</h3>
-            <div className="map-placeholder">
-              <p>📍 {property.location}</p>
+            <h3>Location & Map</h3>
+            <div className="location-info">
+              <div className="location-display">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke="currentColor" strokeWidth="2"/>
+                  <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2"/>
+                </svg>
+                <span>{property.location}</span>
+              </div>
+              
+              <div className="map-container coming-soon">
+                <div className="map-placeholder">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke="currentColor" strokeWidth="2"/>
+                    <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2"/>
+                  </svg>
+                  <p>Interactive map will be displayed here</p>
+                </div>
+              </div>
+              
               <a 
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.location)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="view-on-maps"
+                className="btn btn-outline view-on-maps"
               >
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke="currentColor" strokeWidth="2"/>
+                  <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2"/>
+                </svg>
                 View on Google Maps
               </a>
             </div>
@@ -258,10 +290,31 @@ const PropertyDetail = ({ user }) => {
           {/* Payment Section - Authentication Required */}
           {user && (
             <div className="payment-section">
-              <h3>Payment</h3>
-              <button className="pay-button">
-                Pay Now - KSh {property.price?.toLocaleString()}
+              <h3>Secure Payment</h3>
+              <p className="payment-description">
+                Ready to move forward? Complete your payment securely through our integrated payment system.
+              </p>
+              <div className="payment-amount">
+                <span className="currency">KSh</span>
+                <span className="amount">
+                  {property.priceType === 'range' 
+                    ? `${property.priceMin?.toLocaleString()} - ${property.priceMax?.toLocaleString()}`
+                    : property.price?.toLocaleString()
+                  }
+                </span>
+              </div>
+              <button className="btn btn-primary pay-button coming-soon">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2v20m-8-8l8 8 8-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Secure Payment
               </button>
+              <p className="payment-note">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2"/>
+                </svg>
+                SSL encrypted and secure
+              </p>
             </div>
           )}
         </div>

@@ -36,6 +36,7 @@ const Navbar = ({ user, setUser }) => {
       <div className="navbar-center">
         <Link to="/" className="nav-link">Home</Link>
         <Link to="/listings" className="nav-link">Listings</Link>
+        <Link to="/contact" className="nav-link">Contact Us</Link>
         {canManageProperties(user) && (
           <>
             <Link to="/my-listings" className="nav-link">My Properties</Link>

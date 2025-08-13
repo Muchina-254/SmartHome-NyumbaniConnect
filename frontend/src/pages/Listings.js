@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PropertyFilter from '../components/PropertyFilter';
+import { useToast } from '../hooks/useToast';
 import './Listings.css';
+import '../styles/toast.css';
 
 const Listings = ({ user }) => {
   const [properties, setProperties] = useState([]);
@@ -10,6 +12,7 @@ const Listings = ({ user }) => {
   const [filterLoading, setFilterLoading] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState({});
   const [isAdmin, setIsAdmin] = useState(false);
+  const { showNotification, ToastContainer } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,7 +69,7 @@ const Listings = ({ user }) => {
 
   const handleVerify = async (propertyId, isCurrentlyVerified) => {
     if (!user || user.role !== 'Admin') {
-      alert('Only administrators can verify properties');
+      showNotification('Only administrators can verify properties', 'warning');
       return;
     }
 
@@ -82,10 +85,10 @@ const Listings = ({ user }) => {
         prop._id === propertyId ? { ...prop, verified: !isCurrentlyVerified } : prop
       ));
       
-      alert(`Property ${isCurrentlyVerified ? 'unverified' : 'verified'} successfully`);
+      showNotification(`Property ${isCurrentlyVerified ? 'unverified' : 'verified'} successfully`, 'success');
     } catch (error) {
       console.error('Error updating verification:', error);
-      alert('Failed to update property verification');
+      showNotification('Failed to update property verification', 'error');
     }
   };
 
@@ -282,6 +285,7 @@ const Listings = ({ user }) => {
           })
         )}
       </div>
+      <ToastContainer />
     </div>
   );
 };
