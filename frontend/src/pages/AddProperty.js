@@ -6,15 +6,21 @@ const AddProperty = () => {
   const [form, setForm] = useState({
     title: '',
     location: '',
+    transactionType: 'rent', // 'rent' or 'sale'
     priceType: 'fixed', // 'fixed' or 'range'
     price: '',
     priceMin: '',
     priceMax: '',
+    rentPeriod: 'monthly', // 'monthly', 'yearly', 'weekly'
+    securityDeposit: '',
     bedrooms: '',
     bathrooms: '',
+    size: '',
     type: 'apartment',
+    furnishingStatus: 'unfurnished',
+    amenities: [],
     description: '',
-    images: [], // Changed from image to images array
+    images: [],
     contactName: '',
     contactPhone: '',
     contactEmail: ''
@@ -29,6 +35,19 @@ const AddProperty = () => {
     setForm({ ...form, [name]: value });
     // Clear message when user starts typing
     if (message) setMessage('');
+  };
+
+  const handleAmenityChange = (e) => {
+    const { value, checked } = e.target;
+    let newAmenities = [...form.amenities];
+    
+    if (checked) {
+      newAmenities.push(value);
+    } else {
+      newAmenities = newAmenities.filter(amenity => amenity !== value);
+    }
+    
+    setForm({ ...form, amenities: newAmenities });
   };
 
   const handleFileChange = (e) => {
@@ -105,11 +124,27 @@ const AddProperty = () => {
       }
     }
     
+    // Validate rental specific fields
+    if (form.transactionType === 'rent') {
+      if (!form.securityDeposit) {
+        setMessage('Security deposit is required for rental properties');
+        setMessageType('error');
+        return false;
+      }
+    }
+    
     if (!form.bedrooms || !form.bathrooms) {
       setMessage('Bedrooms and bathrooms are required');
       setMessageType('error');
       return false;
     }
+    
+    if (!form.images || form.images.length === 0) {
+      setMessage('At least one image is required');
+      setMessageType('error');
+      return false;
+    }
+    
     return true;
   };
 
@@ -133,13 +168,23 @@ const AddProperty = () => {
     
     formData.append('title', form.title);
     formData.append('location', form.location);
+    formData.append('transactionType', form.transactionType);
     formData.append('bedrooms', form.bedrooms);
     formData.append('bathrooms', form.bathrooms);
+    if (form.size) formData.append('size', form.size);
     formData.append('type', form.type);
+    formData.append('furnishingStatus', form.furnishingStatus);
     formData.append('description', form.description);
     formData.append('contactName', form.contactName);
     formData.append('contactPhone', form.contactPhone);
     formData.append('contactEmail', form.contactEmail);
+    
+    // Handle amenities
+    if (form.amenities && form.amenities.length > 0) {
+      form.amenities.forEach(amenity => {
+        formData.append('amenities', amenity);
+      });
+    }
     
     // Handle pricing based on type
     if (form.priceType === 'fixed') {
@@ -150,12 +195,24 @@ const AddProperty = () => {
       formData.append('priceMax', form.priceMax);
       formData.append('priceType', 'range');
     }
+    
+    // Handle rental specific fields
+    if (form.transactionType === 'rent') {
+      formData.append('rentPeriod', form.rentPeriod);
+      formData.append('securityDeposit', form.securityDeposit);
+    }
 
     // Append multiple images
     if (form.images && form.images.length > 0) {
       Array.from(form.images).forEach((image, index) => {
         formData.append('images', image);
       });
+    }
+
+    // Debug: Log what we're sending
+    console.log('Form data being sent:');
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
     }
 
     try {
@@ -173,13 +230,19 @@ const AddProperty = () => {
       setForm({ 
         title: '', 
         location: '', 
+        transactionType: 'rent',
         priceType: 'fixed',
         price: '',
         priceMin: '', 
         priceMax: '',
+        rentPeriod: 'monthly',
+        securityDeposit: '',
         bedrooms: '',
         bathrooms: '',
+        size: '',
         type: 'apartment',
+        furnishingStatus: 'unfurnished',
+        amenities: [],
         description: '', 
         images: [],
         contactName: '',
@@ -193,12 +256,22 @@ const AddProperty = () => {
       
     } catch (err) {
       console.error('Property creation error:', err);
+      console.error('Error response:', err.response?.data);
+      
       if (err.response?.status === 403) {
-        setMessage(' Access denied. Only Landlords, Developers, and Agents can add properties.');
+        setMessage('❌ Access denied. Only Landlords, Developers, and Agents can add properties.');
+      } else if (err.response?.status === 400) {
+        setMessage(`❌ Validation Error: ${err.response.data.details || err.response.data.error || 'Invalid form data'}`);
+      } else if (err.response?.status === 500) {
+        setMessage(`❌ Server Error: ${err.response.data.details || 'Please try again later'}`);
       } else if (err.response?.data?.message) {
-        setMessage(` ${err.response.data.message}`);
+        setMessage(`❌ ${err.response.data.message}`);
+      } else if (err.response?.data?.error) {
+        setMessage(`❌ ${err.response.data.error}`);
+      } else if (err.message) {
+        setMessage(`❌ ${err.message}`);
       } else {
-        setMessage(' Failed to add property. Please try again.');
+        setMessage('❌ Failed to add property. Please try again.');
       }
       setMessageType('error');
     } finally {
@@ -247,6 +320,21 @@ const AddProperty = () => {
             />
           </div>
 
+          {/* Transaction Type Selection */}
+          <div className="form-group">
+            <label htmlFor="transactionType">Transaction Type *</label>
+            <select
+              id="transactionType"
+              name="transactionType"
+              value={form.transactionType}
+              onChange={handleChange}
+              required
+            >
+              <option value="rent">For Rent</option>
+              <option value="sale">For Sale</option>
+            </select>
+          </div>
+
           {/* Pricing Type Selection */}
           <div className="form-group">
             <label htmlFor="priceType">Pricing Type *</label>
@@ -265,12 +353,14 @@ const AddProperty = () => {
           {/* Conditional Price Fields */}
           {form.priceType === 'fixed' ? (
             <div className="form-group">
-              <label htmlFor="price">Price (KES) *</label>
+              <label htmlFor="price">
+                {form.transactionType === 'rent' ? 'Monthly Rent (KES) *' : 'Sale Price (KES) *'}
+              </label>
               <input
                 id="price"
                 type="number"
                 name="price"
-                placeholder="65,000"
+                placeholder={form.transactionType === 'rent' ? '65,000' : '5,000,000'}
                 value={form.price}
                 onChange={handleChange}
                 min="1"
@@ -280,12 +370,14 @@ const AddProperty = () => {
           ) : (
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="priceMin">Min Price (KES) *</label>
+                <label htmlFor="priceMin">
+                  {form.transactionType === 'rent' ? 'Min Rent (KES) *' : 'Min Price (KES) *'}
+                </label>
                 <input
                   id="priceMin"
                   type="number"
                   name="priceMin"
-                  placeholder="50,000"
+                  placeholder={form.transactionType === 'rent' ? '50,000' : '3,000,000'}
                   value={form.priceMin}
                   onChange={handleChange}
                   min="1"
@@ -293,12 +385,14 @@ const AddProperty = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="priceMax">Max Price (KES) *</label>
+                <label htmlFor="priceMax">
+                  {form.transactionType === 'rent' ? 'Max Rent (KES) *' : 'Max Price (KES) *'}
+                </label>
                 <input
                   id="priceMax"
                   type="number"
                   name="priceMax"
-                  placeholder="80,000"
+                  placeholder={form.transactionType === 'rent' ? '80,000' : '8,000,000'}
                   value={form.priceMax}
                   onChange={handleChange}
                   min="1"
@@ -306,6 +400,41 @@ const AddProperty = () => {
                 />
               </div>
             </div>
+          )}
+
+          {/* Rental Specific Fields */}
+          {form.transactionType === 'rent' && (
+            <>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="rentPeriod">Rent Period *</label>
+                  <select
+                    id="rentPeriod"
+                    name="rentPeriod"
+                    value={form.rentPeriod}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
+                    <option value="weekly">Weekly</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="securityDeposit">Security Deposit (KES) *</label>
+                  <input
+                    id="securityDeposit"
+                    type="number"
+                    name="securityDeposit"
+                    placeholder="65,000"
+                    value={form.securityDeposit}
+                    onChange={handleChange}
+                    min="0"
+                    required
+                  />
+                </div>
+              </div>
+            </>
           )}
 
           {/* Price Display */}
@@ -332,6 +461,7 @@ const AddProperty = () => {
                 required
               >
                 <option value="">Select</option>
+                <option value="0">Studio (0 BR)</option>
                 <option value="1">1 Bedroom</option>
                 <option value="2">2 Bedrooms</option>
                 <option value="3">3 Bedrooms</option>
@@ -357,6 +487,34 @@ const AddProperty = () => {
             </div>
           </div>
 
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="size">Size (Square Feet)</label>
+              <input
+                id="size"
+                type="number"
+                name="size"
+                placeholder="1200"
+                value={form.size}
+                onChange={handleChange}
+                min="1"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="furnishingStatus">Furnishing Status</label>
+              <select
+                id="furnishingStatus"
+                name="furnishingStatus"
+                value={form.furnishingStatus}
+                onChange={handleChange}
+              >
+                <option value="unfurnished">Unfurnished</option>
+                <option value="semi-furnished">Semi-Furnished</option>
+                <option value="furnished">Fully Furnished</option>
+              </select>
+            </div>
+          </div>
+
           <div className="form-group">
             <label htmlFor="type">Property Type</label>
             <select
@@ -371,7 +529,42 @@ const AddProperty = () => {
               <option value="bungalow">Bungalow</option>
               <option value="studio">Studio</option>
               <option value="penthouse">Penthouse</option>
+              <option value="townhouse">Townhouse</option>
+              <option value="condo">Condo</option>
+              <option value="land">Land</option>
+              <option value="commercial">Commercial</option>
             </select>
+          </div>
+
+          {/* Amenities Section */}
+          <div className="form-group">
+            <label>Amenities (Select all that apply)</label>
+            <div className="amenities-grid">
+              {[
+                { value: 'parking', label: 'Parking' },
+                { value: 'gym', label: 'Gym' },
+                { value: 'pool', label: 'Swimming Pool' },
+                { value: 'security', label: '24/7 Security' },
+                { value: 'garden', label: 'Garden' },
+                { value: 'balcony', label: 'Balcony' },
+                { value: 'elevator', label: 'Elevator' },
+                { value: 'backup_power', label: 'Backup Power' },
+                { value: 'water_supply', label: 'Water Supply' },
+                { value: 'internet', label: 'Internet/WiFi' },
+                { value: 'air_conditioning', label: 'Air Conditioning' },
+                { value: 'heating', label: 'Heating' }
+              ].map((amenity) => (
+                <label key={amenity.value} className="amenity-checkbox">
+                  <input
+                    type="checkbox"
+                    value={amenity.value}
+                    checked={form.amenities.includes(amenity.value)}
+                    onChange={handleAmenityChange}
+                  />
+                  <span>{amenity.label}</span>
+                </label>
+              ))}
+            </div>
           </div>
 
           <div className="form-group">

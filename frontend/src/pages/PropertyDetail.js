@@ -110,8 +110,18 @@ const PropertyDetail = ({ user }) => {
         <div className="property-info">
           <div className="property-header">
             <h1>{property.title}</h1>
-            <div className="property-price">KSh {property.price?.toLocaleString()}</div>
+            <div className="property-price">
+              KSh {property.price?.toLocaleString()}
+              {property.transactionType === 'rent' && property.rentPeriod && (
+                <span className="price-period">/{property.rentPeriod}</span>
+              )}
+            </div>
             <div className="property-location">📍 {property.location}</div>
+            {property.transactionType && (
+              <div className={`transaction-badge ${property.transactionType}`}>
+                {property.transactionType === 'rent' ? 'FOR RENT' : 'FOR SALE'}
+              </div>
+            )}
           </div>
 
           <div className="property-details">
@@ -119,25 +129,78 @@ const PropertyDetail = ({ user }) => {
               <span className="detail-label">Type:</span>
               <span className="detail-value">{property.type || 'Not specified'}</span>
             </div>
-            {property.bedrooms && (
+            <div className="detail-row">
+              <span className="detail-label">Transaction:</span>
+              <span className="detail-value transaction-type">
+                {property.transactionType === 'rent' ? 'For Rent' : 'For Sale'}
+              </span>
+            </div>
+            {property.bedrooms !== undefined && (
               <div className="detail-row">
                 <span className="detail-label">Bedrooms:</span>
                 <span className="detail-value">{property.bedrooms}</span>
               </div>
             )}
-            {property.bathrooms && (
+            {property.bathrooms !== undefined && (
               <div className="detail-row">
                 <span className="detail-label">Bathrooms:</span>
                 <span className="detail-value">{property.bathrooms}</span>
               </div>
             )}
+            {property.size && (
+              <div className="detail-row">
+                <span className="detail-label">Size:</span>
+                <span className="detail-value">{property.size} sq ft</span>
+              </div>
+            )}
+            {property.furnishingStatus && (
+              <div className="detail-row">
+                <span className="detail-label">Furnishing:</span>
+                <span className="detail-value furnishing-status">
+                  {property.furnishingStatus.replace('-', ' ')}
+                </span>
+              </div>
+            )}
+            {property.ownershipType && (
+              <div className="detail-row">
+                <span className="detail-label">Ownership:</span>
+                <span className="detail-value">{property.ownershipType}</span>
+              </div>
+            )}
+            {property.transactionType === 'rent' && property.rentPeriod && (
+              <div className="detail-row">
+                <span className="detail-label">Rent Period:</span>
+                <span className="detail-value">{property.rentPeriod}</span>
+              </div>
+            )}
+            {property.transactionType === 'rent' && property.securityDeposit && (
+              <div className="detail-row">
+                <span className="detail-label">Security Deposit:</span>
+                <span className="detail-value">KSh {property.securityDeposit?.toLocaleString()}</span>
+              </div>
+            )}
             <div className="detail-row">
               <span className="detail-label">Status:</span>
               <span className={`status ${property.verified ? 'verified' : 'pending'}`}>
-                {property.verified ? 'Verified' : 'Pending Verification'}
+                {property.verified ? '✅ Verified' : '⏳ Pending Verification'}
               </span>
             </div>
           </div>
+
+          {/* Amenities Section */}
+          {property.amenities && property.amenities.length > 0 && (
+            <div className="amenities-section">
+              <h3>Amenities</h3>
+              <div className="amenities-grid">
+                {property.amenities.map((amenity, index) => (
+                  <div key={index} className="amenity-item">
+                    <span className="amenity-icon">✓</span>
+                    <span className="amenity-name">{amenity.replace('_', ' ')}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Description - Always visible */}
           <div className="property-description">

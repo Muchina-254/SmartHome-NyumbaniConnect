@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Listings.css';
+import './MyListings.css';
 
 const MyListings = () => {
   const navigate = useNavigate();
@@ -41,97 +41,104 @@ const MyListings = () => {
   };
 
   return (
-    <div className="listings-page">
+    <div className="my-listings-page">
       <h2>My Properties</h2>
 
-      <div className="listings-grid">
+      <div className="my-listings-container">
         {myListings.length === 0 ? (
-          <p>You haven’t posted any properties yet.</p>
+          <div className="empty-state">
+            <p>You haven't posted any properties yet.</p>
+            <button 
+              className="add-property-button"
+              onClick={() => navigate('/add-property')}
+            >
+              Add Your First Property
+            </button>
+          </div>
         ) : (
           myListings.map(property => (
-            <div key={property._id} className="listing-card">
-              {property.images && property.images.length > 0 ? (
-                <div style={{ position: 'relative' }}>
+            <div key={property._id} className="my-listing-card">
+              <div className="my-listing-image">
+                {property.images && property.images.length > 0 ? (
+                  <>
+                    <img
+                      src={`http://localhost:5000/uploads/${property.images[0]}`}
+                      alt={property.title}
+                      onError={(e) => {
+                        e.target.src = `http://localhost:5000/uploads/default.jpg`;
+                      }}
+                    />
+                    {property.images.length > 1 && (
+                      <div className="image-count-badge">
+                        +{property.images.length - 1}
+                      </div>
+                    )}
+                  </>
+                ) : (
                   <img
-                    src={`http://localhost:5000/uploads/${property.images[0]}`}
+                    src={`http://localhost:5000/uploads/default.jpg`}
                     alt={property.title}
-                    style={{
-                      width: '100%',
-                      height: '160px',
-                      objectFit: 'cover',
-                      borderRadius: '8px'
-                    }}
                   />
-                  {property.images.length > 1 && (
-                    <div style={{
-                      position: 'absolute',
-                      top: '8px',
-                      right: '8px',
-                      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                      color: 'white',
-                      padding: '4px 8px',
-                      borderRadius: '12px',
-                      fontSize: '12px',
-                      fontWeight: 'bold'
-                    }}>
-                      +{property.images.length - 1}
+                )}
+              </div>
+
+              <div className="my-listing-content">
+                <div className="my-listing-header">
+                  <h3 className="my-listing-title">{property.title}</h3>
+                  <p className="my-listing-location">{property.location}</p>
+                  <p className="my-listing-price">
+                    KSh {property.priceType === 'range' 
+                      ? `${property.priceMin?.toLocaleString()} - ${property.priceMax?.toLocaleString()}` 
+                      : property.price?.toLocaleString()}
+                  </p>
+                </div>
+
+                <div className="my-listing-details">
+                  {property.type && (
+                    <div className="detail-item">
+                      <span className="detail-value">{property.type}</span>
+                      <span className="detail-label">Type</span>
+                    </div>
+                  )}
+                  {property.bedrooms && (
+                    <div className="detail-item">
+                      <span className="detail-value">{property.bedrooms}</span>
+                      <span className="detail-label">Bedrooms</span>
+                    </div>
+                  )}
+                  {property.bathrooms && (
+                    <div className="detail-item">
+                      <span className="detail-value">{property.bathrooms}</span>
+                      <span className="detail-label">Bathrooms</span>
                     </div>
                   )}
                 </div>
-              ) : (
-                <img
-                  src="/uploads/default.jpg"
-                  alt={property.title}
-                  style={{
-                    width: '100%',
-                    height: '160px',
-                    objectFit: 'cover',
-                    borderRadius: '8px'
-                  }}
-                />
-              )}
 
-              <h3>{property.title}</h3>
-              <p>{property.location}</p>
-              <p>
-                KES {property.priceType === 'range' 
-                  ? `${property.priceMin} - ${property.priceMax}` 
-                  : property.price}
-              </p>
-              <p style={{ color: property.verified ? 'green' : 'red' }}>
-                {property.verified ? 'Verified' : 'Not Verified'}
-              </p>
+                <div className={`verification-status ${property.verified ? 'verified' : 'not-verified'}`}>
+                  {property.verified ? 'Property Verified' : 'Pending Verification'}
+                </div>
 
-              <button
-                onClick={() => handleEdit(property)}
-                style={{
-                  backgroundColor: '#2980b9',
-                  color: '#fff',
-                  border: 'none',
-                  padding: '6px 12px',
-                  marginTop: '8px',
-                  marginRight: '6px',
-                  borderRadius: '5px',
-                  cursor: 'pointer'
-                }}
-              >
-                Edit
-              </button>
-
-              <button
-                onClick={() => handleDelete(property._id)}
-                style={{
-                  backgroundColor: '#c0392b',
-                  color: '#fff',
-                  border: 'none',
-                  padding: '6px 12px',
-                  marginTop: '8px',
-                  borderRadius: '5px',
-                  cursor: 'pointer'
-                }}
-              >
-                Delete
-              </button>
+                <div className="my-listing-actions">
+                  <button
+                    onClick={() => navigate(`/property/${property._id}`)}
+                    className="action-button view-details-button"
+                  >
+                    View Details
+                  </button>
+                  <button
+                    onClick={() => handleEdit(property)}
+                    className="action-button edit-button"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(property._id)}
+                    className="action-button delete-button"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
             </div>
           ))
         )}

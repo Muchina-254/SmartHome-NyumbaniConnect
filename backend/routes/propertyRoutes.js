@@ -32,6 +32,7 @@ const canManageProperties = async (req, res, next) => {
     }
     
     req.userRole = user.role;
+    req.userData = user;
     next();
   } catch (err) {
     console.error('Role check error:', err);
@@ -46,18 +47,61 @@ const upload = multer({ storage });
 // @access  Private (Landlord, Developer, Agent only)
 router.post('/', authMiddleware, canManageProperties, upload.array('images', 5), async (req, res) => {
   try {
+    console.log('Received property creation request');
+    console.log('Request body:', req.body);
+    console.log('Files:', req.files);
+    console.log('User role:', req.userRole);
+    
     const imageFilenames = req.files ? req.files.map(file => file.filename) : [];
     
-    const newProperty = new Property({
+    // Determine ownership type based on user role
+    let ownershipType = 'owned';
+    if (req.userRole === 'Agent') {
+      ownershipType = 'managed';
+    } else if (req.userRole === 'Developer') {
+      ownershipType = 'owned'; // Developer owns the property they build
+    }
+    
+    // Handle amenities array properly
+    let amenities = [];
+    if (req.body['amenities[]']) {
+      amenities = Array.isArray(req.body['amenities[]']) 
+        ? req.body['amenities[]'] 
+        : [req.body['amenities[]']];
+    } else if (req.body.amenities) {
+      amenities = Array.isArray(req.body.amenities) 
+        ? req.body.amenities 
+        : [req.body.amenities];
+    }
+    
+    console.log('Processed amenities:', amenities);
+    
+    // Create property data object
+    const propertyData = {
       ...req.body,
-      images: imageFilenames, // Changed from 'image' to 'images'
-      user: req.user.userId || req.user.id // Handle both JWT token structures
-    });
+      amenities: amenities,
+      images: imageFilenames,
+      user: req.user.userId || req.user.id,
+      ownershipType: ownershipType,
+      // Auto-set contact info from user data if not provided
+      contactName: req.body.contactName || req.userData.name,
+      contactPhone: req.body.contactPhone || req.userData.phone,
+      contactEmail: req.body.contactEmail || req.userData.email
+    };
+    
+    // Remove the amenities[] field if it exists
+    delete propertyData['amenities[]'];
+    
+    console.log('Final property data:', propertyData);
+    
+    const newProperty = new Property(propertyData);
     const saved = await newProperty.save();
+    
+    console.log('Property saved successfully:', saved._id);
     res.status(201).json(saved);
   } catch (err) {
     console.error('Property creation error:', err);
-    res.status(500).json({ error: 'Failed to create property' });
+    res.status(500).json({ error: 'Failed to create property', details: err.message });
   }
 });
 
@@ -76,14 +120,102 @@ router.get('/my', authMiddleware, canManageProperties, async (req, res) => {
 });
 
 // @route   GET /api/properties
-// @desc    Get all properties
+// @desc    Get all properties with filtering
 // @access  Public
 router.get('/', async (req, res) => {
   try {
-    const props = await Property.find().sort({ createdAt: -1 });
+    const { 
+      transactionType, 
+      type, 
+      minPrice, 
+      maxPrice, 
+      bedrooms, 
+      bathrooms,
+      location,
+      furnishingStatus,
+      amenities
+    } = req.query;
+    
+    // Build filter object
+    let filter = { isAvailable: true };
+    
+    if (transactionType) filter.transactionType = transactionType;
+    if (type) filter.type = type;
+    if (bedrooms) filter.bedrooms = { $gte: parseInt(bedrooms) };
+    if (bathrooms) filter.bathrooms = { $gte: parseInt(bathrooms) };
+    if (location) filter.location = { $regex: location, $options: 'i' };
+    if (furnishingStatus) filter.furnishingStatus = furnishingStatus;
+    if (amenities) filter.amenities = { $in: amenities.split(',') };
+    
+    // Price filtering
+    if (minPrice || maxPrice) {
+      filter.$or = [
+        // For fixed price properties
+        {
+          priceType: 'fixed',
+          price: {
+            ...(minPrice && { $gte: parseInt(minPrice) }),
+            ...(maxPrice && { $lte: parseInt(maxPrice) })
+          }
+        },
+        // For range price properties
+        {
+          priceType: 'range',
+          priceMin: {
+            ...(minPrice && { $gte: parseInt(minPrice) })
+          },
+          priceMax: {
+            ...(maxPrice && { $lte: parseInt(maxPrice) })
+          }
+        }
+      ];
+    }
+    
+    const props = await Property.find(filter)
+      .populate('user', 'name email phone role')
+      .sort({ createdAt: -1 });
+    
     res.json(props);
   } catch (err) {
+    console.error('Get properties error:', err);
     res.status(500).json({ error: 'Failed to fetch properties' });
+  }
+});
+
+// @route   GET /api/properties/categories
+// @desc    Get property categories and counts
+// @access  Public
+router.get('/categories', async (req, res) => {
+  try {
+    const categories = await Property.aggregate([
+      { $match: { isAvailable: true } },
+      {
+        $group: {
+          _id: {
+            transactionType: '$transactionType',
+            type: '$type'
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $group: {
+          _id: '$_id.transactionType',
+          types: {
+            $push: {
+              type: '$_id.type',
+              count: '$count'
+            }
+          },
+          total: { $sum: '$count' }
+        }
+      }
+    ]);
+    
+    res.json(categories);
+  } catch (err) {
+    console.error('Get categories error:', err);
+    res.status(500).json({ error: 'Failed to fetch categories' });
   }
 });
 
