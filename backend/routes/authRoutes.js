@@ -31,20 +31,32 @@ router.post('/register', async (req, res) => {
 // LOGIN
 router.post('/login', async (req, res) => {
   try {
+    console.log('🔐 Login attempt for:', req.body.email);
     const { email, password } = req.body;
 
     // Find the user by email
     const user = await User.findOne({ email });
+    console.log('👤 User found:', user ? 'YES' : 'NO');
     if (!user) return res.status(400).json({ error: 'Invalid email or password' });
 
     // Compare passwords
+    console.log('🔑 Comparing passwords...');
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log('🔑 Password match:', isMatch);
     if (!isMatch) return res.status(400).json({ error: 'Invalid email or password' });
 
+    // Check JWT_SECRET
+    console.log('🔐 JWT_SECRET exists:', !!process.env.JWT_SECRET);
+    
     // Generate JWT
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ 
+      id: user._id, 
+      userId: user._id, 
+      role: user.role 
+    }, process.env.JWT_SECRET, {
       expiresIn: '3d'
     });
+    console.log('🎟️  Token generated successfully, length:', token.length);
 
     res.json({
       token,
@@ -56,8 +68,10 @@ router.post('/login', async (req, res) => {
         role: user.role
       }
     });
+    console.log('✅ Login successful for:', email);
   } catch (err) {
-    console.error('Login Error:', err);
+    console.error('❌ Login Error Details:', err.message);
+    console.error('❌ Full Error:', err);
     res.status(500).json({ error: 'Login failed. Try again.' });
   }
 });
