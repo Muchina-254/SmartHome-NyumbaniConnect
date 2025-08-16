@@ -1,6 +1,6 @@
 ## NyumbaniConnect 
 
-SmartHome is a mobile-first digital platform that transforms the Kenyan real estate experience by offering verified property listings, tenant-landlord matching, and seamless service integration. Designed to solve fraud, long vacancy periods, and inefficient communication, SmartNyumba modernizes how property is rented, managed, and moved into.
+NyumbaniConnect is a mobile-first digital platform that transforms the Kenyan real estate experience by offering verified property listings, tenant-landlord matching, and seamless service integration. Designed to solve fraud, long vacancy periods, and inefficient communication, NyumbaniConnect modernizes how property is rented, managed, and moved into.
 
 ##  Market Need
 
@@ -14,7 +14,7 @@ With over 3 million urban renters and 80%+ smartphone penetration, there is a ma
 
 ##  Project Value
 
-SmartNyumba offers:
+NyumbaniConnect offers:
 -  Verified listings and user ID verification
 -  Smart property search and match
 -  Integrated service providers (e.g., internet, water)
