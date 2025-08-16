@@ -56,9 +56,9 @@ https://nyumbaniconnect.netlify.app/
 | Name            | Role                       | GitHub Handle     | Responsibilities                             |
 |-----------------|----------------------------|-------------------|----------------------------------------------|
 | Sarah Muchina   | Product Lead & Analyst     | @Muchina-254      | Strategy, market research, stakeholder mgmt  |
-| Alvin Kiprotich | Backend Developer          |AlvinKiprotich-dev                 | API design, DB architecture, auth flows      |
-| Abdel           | Frontend/Mobile Developer  |                   | UI/UX, React Native app, responsiveness      |
-| Duncan          | Backend/Frontend Developer |                   | DB architecture, React Native app, responsiveness |
+| Alvin Kiprotich | Backend/Frontend Developer          |AlvinKiprotich-dev                 | API design, DB architecture, auth flows      |
+| Abdel           | Frontend/Mobile Developer  |Abdel-Karim-cmds                  | UI/UX, React Native app, responsiveness      |
+| Duncan          | Backend/Frontend Developer |Bartholom3                   | DB architecture, React Native app, responsiveness |
 | Ann Mutua       | QA & Tester                |                   | Testing, bug reporting, user feedback        |
 
 
